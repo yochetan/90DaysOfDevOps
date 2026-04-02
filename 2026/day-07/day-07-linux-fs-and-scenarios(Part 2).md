@@ -35,7 +35,7 @@ Step 3: Check if service is enabled on boot
 systemctl is-enabled nginx
 -> this will tell is it enabled or disabled 
 
-Scenario:
+Scenario 1: Service Not Starting
 A web application service called 'myapp' failed to start after a server reboot.
 What commands would you run to diagnose the issue?
 Write at least 4 commands in order.
@@ -49,4 +49,55 @@ Write at least 4 commands in order.
     Mar 31 20:15:45 ip-172-31-29-59 systemd[1]: Stopped nginx.service - A high performance web server and a reverse proxy server.
 3) systemctl is-enabled myapp
 4) sudo systemctl start nginx [if both are dead]
+
+
+
+
+Scenario 2: High CPU Usage
+Your manager reports that the application server is slow.
+You SSH into the server. What commands would you run to identify
+which process is using high CPU?
+
+1) Use a command that shows live CPU usage [command: top]
+2) Look for processes sorted by CPU percentage [command: ps aux --sort=-%cpu | head -10]
+3) Note the PID (Process ID) of the top process [command: htop ] maybe
+
+
+
+Scenario 3: Finding Service Logs
+A developer asks: "Where are the logs for the 'docker' service?"
+The service is managed by systemd.
+What commands would you use?
+
+systemd services → logs are in journald
+Command pattern: journalctl -u <service-name>
+Use -n flag to limit number of lines
+Use -f flag to follow logs in real-time (like tail -f)
+
+1) Check service status first [command: systemctl status ssh]
+2) View last 50 lines of logs [command: journalctl -u ssh -n 50]
+3) Follow logs in real-time [command: journalctl -u ssh -f]
+
+
+
+Scenario 4: File Permissions Issue
+A script at /home/user/backup.sh is not executing.
+When you run it: ./backup.sh
+You get: "Permission denied"
+
+What commands would you use to fix this?
+
+Step 1: Check current permissions
+Command: ls -l /home/user/backup.sh
+Look for: -rw-r--r-- (notice no 'x' = not executable)
+
+Step 2: Add execute permission
+Command: chmod +x /home/user/backup.sh
+
+Step 3: Verify it worked
+Command: ls -l /home/user/backup.sh
+Look for: -rwxr-xr-x (notice 'x' = executable)
+
+Step 4: Try running it
+Command: ./backup.sh
 
