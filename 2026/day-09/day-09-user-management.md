@@ -47,3 +47,33 @@ tokyo → developers
 berlin → developers + admins (both groups)
 professor → admins
 
+command: sudo gpasswd - a tokyo developers
+         sudo gpasswd - a berlin developers
+         sudo gpasswd - a berlin admins
+         sudo gpasswd - a professor admins
+
+Use appropriate command to check group membership:
+
+command: cat /etc/group
+developers:x:1004:tokyo,berlin
+admins:x:1005:berlin,professor
+
+Task 4: Shared Directory
+
+1) Create directory: /opt/dev-project
+command: sudo mkdir /opt/dev-project
+
+2) Set group owner to developers
+command: sudo chgrp developers dev-project/
+
+3) Set permissions to 775 (rwxrwxr-x)
+command: sudo chmod 775 dev-project/
+
+4) Test by creating files as tokyo and berlin
+command: sudo touch tokyo
+         sudo touch berlin
+not sure
+
+Task 5: Team Workspace
+
+
