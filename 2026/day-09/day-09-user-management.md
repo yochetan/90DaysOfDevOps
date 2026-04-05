@@ -76,4 +76,23 @@ not sure
 
 Task 5: Team Workspace
 
+1) Create user nairobi with home directory
+command: sudo useradd -m nairobi
 
+2) Create group project-team
+command: sudo groupadd project-team
+
+3) Add nairobi and tokyo to project-team
+command: sudo gpasswd -a nairobi project-team
+         sudo gpasswd -a tokyo project-team
+
+5) Create /opt/team-workspace directory
+command: sudo mkdir /opt/team-workspace
+
+6) Set group to project-team, permissions to 775
+command: sudo chgrp project-team team-workspace/
+command: sudo chmod 775 team-workspace/
+
+8) Test by creating file as nairobi
+command: sudo touch nairobi /opt/team-workspace/
+not sure
