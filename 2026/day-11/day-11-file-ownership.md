@@ -92,4 +92,62 @@ touch heist-project/vault/gold.txt
 touch heist-project/plans/strategy.conf
 
 2) Create group planners: sudo groupadd planners
+command: sudo groupadd planners
 
+3) Change ownership of entire heist-project/ directory:
+
+Owner: professor
+Group: planners
+Use recursive flag (-R)
+
+command: sudo chown -R professor:planners heist-project/
+
+4) Verify all files and subdirectories changed: ls -lR heist-project/
+ls -lR heist-project/
+heist-project/:
+total 8
+drwxrwxr-x 2 professor planners 4096 Apr  5 21:11 plans
+drwxrwxr-x 2 professor planners 4096 Apr  5 21:11 vault
+
+heist-project/plans:
+total 0
+-rw-rw-r-- 1 professor planners 0 Apr  5 21:11 strategy.conf
+
+heist-project/vault:
+total 0
+-rw-rw-r-- 1 professor planners 0 Apr  5 21:11 gold.txt
+
+
+Task 6: Practice Challenge
+
+1) Create users: tokyo, berlin, nairobi (if not already created)
+commmand: sudo useradd -m tokyo
+          sudo useradd -m berlin
+          sudo useradd -m nairobi
+   
+2) Create groups: vault-team, tech-team
+command: sudo groupadd vault-team
+         sudo groupadd tech-team
+
+3) Create directory: bank-heist/
+command: mkdir bank-heist/
+
+4) Create 3 files inside:
+touch bank-heist/access-codes.txt
+touch bank-heist/blueprints.pdf
+touch bank-heist/escape-plan.txt
+
+5) Set different ownership:
+access-codes.txt → owner: tokyo, group: vault-team
+command: sudo chown tokyo:vault-team access-codes.txt
+
+blueprints.pdf → owner: berlin, group: tech-team
+command: sudo chown berlin:tech-team blueprints.pdf
+
+escape-plan.txt → owner: nairobi, group: vault-team
+command: sudo chown nairobi:vault-team escape-plan.txt
+
+ls -l bank-heist/
+-rw-rw-r-- 1 tokyo   vault-team 0 Apr  5 22:23 access-codes.txt
+-rw-rw-r-- 1 berlin  tech-team  0 Apr  5 22:23 blueprints.pdf
+-rw-rw-r-- 1 nairobi vault-team 0 Apr  5 22:24 escape-plan.txt
