@@ -93,8 +93,8 @@ Task 6: Extend the Volume
                   old_desc_blocks = 1, new_desc_blocks = 1
                   The filesystem on /dev/devops-vg/app-data is now 179200 (4k) blocks long.
 
-command: df -h /mnt/app-data
-         Filesystem                        Size  Used Avail Use% Mounted on
-         /dev/mapper/devops--vg-app--data  637M   24K  594M   1% /mnt/app-data
+         command: df -h /mnt/app-data
+                  Filesystem                        Size  Used Avail Use% Mounted on
+                  /dev/mapper/devops--vg-app--data  637M   24K  594M   1% /mnt/app-data
 
          
