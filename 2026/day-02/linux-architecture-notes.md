@@ -1,4 +1,5 @@
 List 5 commands you would use daily
+
         man
         cd
         touch
@@ -8,6 +9,7 @@ List 5 commands you would use daily
         rm
 
   Explain process states (running, sleeping, zombie, etc.)
+  
         first on the pc
         bios
         grub
