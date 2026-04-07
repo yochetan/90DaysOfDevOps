@@ -36,6 +36,8 @@ Run: lsblk, pvs, vgs, lvs, df -h
 
 Task 2: Create Physical Volume
 
+         pvcreate — Initialize physical volume(s) for use by LVM
+         
          command: pvcreate /dev/nvme1n1
                   pvs
                   
@@ -44,6 +46,8 @@ Task 2: Create Physical Volume
 
 Task 3: Create Volume Group
 
+         vgcreate — Create a volume group
+         
          command: vgcreate devops-vg /dev/nvme1n1
                   vgs
                   
@@ -52,6 +56,9 @@ Task 3: Create Volume Group
 
 Task 4: Create Logical Volume
 
+         lvcreate — Create a logical volume
+         -L|--size Size[m|UNIT]
+         
          command: lvcreate -L 500M -n app-data devops-vg
                   lvs
                   
@@ -83,9 +90,14 @@ Task 5: Format and Mount
 
 Task 6: Extend the Volume
 
+         lvextend — Add space to a logical volume
+         -L|--size [+]Size[m|UNIT]
+         
          command: lvextend -L +200M /dev/devops-vg/app-data
                   Size of logical volume devops-vg/app-data changed from 500.00 MiB (125 extents) to 700.00 MiB (175 extents).
                   Logical volume devops-vg/app-data successfully resized.
+
+         resize2fs - ext2/ext3/ext4 file system resizer
          
          command: resize2fs /dev/devops-vg/app-data
                   resize2fs 1.47.0 (5-Feb-2023)
