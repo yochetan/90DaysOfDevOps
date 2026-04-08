@@ -146,3 +146,13 @@ Connections snapshot: netstat -an | head — count ESTABLISHED vs LISTEN (rough)
     tcp6       0      0 :::22                   :::*                    LISTEN     
     udp        0      0 127.0.0.54:53           0.0.0.0:*          
 
+Mini Task: Port Probe & Interpret
+Identify one listening port from ss -tulpn (e.g., SSH on 22 or a local web app).
+From the same machine, test it: nc -zv localhost <port> (or curl -I http://localhost:<port>).
+Write one line: is it reachable? If not, what’s the next check? (e.g., service status, firewall).
+Reflection (add to your markdown)
+Which command gives you the fastest signal when something is broken?
+What layer (OSI/TCP-IP) would you inspect next if DNS fails? If HTTP 500 shows up?
+Two follow-up checks you’d run in a real incident.
+
+      UNSOLVED
