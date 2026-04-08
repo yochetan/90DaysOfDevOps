@@ -62,4 +62,68 @@ Task 3: User Input with read
 
    Asks the user for their name using read
 
+          read -p "Enter Your Name: " name
+
+   Asks for their favourite tool
+
+          read -p "Your Favourite Tool Is: " tool
+
+   Prints: Hello <name>, your favourite tool is <tool>
+
+          echo "Hello $name, your favourite tool is $tool"
+
+
+Task 4: If-Else Conditions
        
+1) Create check_number.sh that:
+
+   Takes a number using read
+
+          read -p "Enter a number: " number
+   
+   Prints whether it is positive, negative, or zero
+
+          if [ $number -gt 0 ]; then
+                 echo "$number is positive"
+          elif [ $number -lt 0 ]; then
+                 echo "$number is negative"
+          else
+                 echo "$number is zero"
+          fi
+
+2) Create file_check.sh that:
+
+   Asks for a filename
+
+          read -p "Enter the filename: " filename
+
+   Checks if the file exists using -f
+
+          if [ -f $filename ]; then
+
+   Prints appropriate message
+
+          if [ -f $filename ]; then
+                 echo "File exists"
+          else
+                 echo "File doesn't exists"
+          fi
+
+
+Task 5: Combine It All
+
+Create server_check.sh that:
+
+1) Stores a service name in a variable (e.g., nginx, sshd)
+
+              read -p "Enter the service: " service
+
+2) Asks the user: "Do you want to check the status? (y/n)"
+
+              read -p "Do you want to check the status? (y/n) " yn
+
+3) If y — runs systemctl status <service> and prints whether it's active or not
+
+
+
+4) If n — prints "Skipped."
