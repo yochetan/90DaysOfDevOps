@@ -124,6 +124,11 @@ Create server_check.sh that:
 
 3) If y — runs systemctl status <service> and prints whether it's active or not
 
-
+        if [ "$yn" == "y" ]; then
+                systemctl status $service | grep "Active:"
 
 4) If n — prints "Skipped."
+
+        else
+                echo "Skipped." 
+        fi
