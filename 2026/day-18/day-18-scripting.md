@@ -116,3 +116,127 @@ Compare with a function that uses regular variables
 
 
 Task 5: Build a Script — System Info Reporter
+
+Create system_info.sh that uses functions for everything:
+
+1) A function to print hostname and OS info
+
+        system_info() {
+            echo "===== SYSTEM INFO ====="
+            echo "Hostname: $(hostname)"
+            echo "OS Information:"
+            cat /etc/os-release | grep PRETTY_NAME
+            echo
+        }
+
+        >>The PRETTY_NAME variable is commonly used in Linux systems within the /etc/os-release file to provide a human-readable description of the operating                 system. 
+        
+2) A function to print uptime: The uptime command is a standard utility on Unix-like operating systems (including Linux and macOS) that provides a snapshot of how long the system has been running and its current performance load.
+
+        check_uptime() {
+            echo "===== UPTIME ====="
+            uptime -p
+            echo
+        }
+
+3) A function to print disk usage (top 5 by size)
+
+        disk_usage() {
+            echo "===== TOP 5 DISK USAGE ====="
+            du -ah / 2>/dev/null | sort -rh | head -n 5 || true
+            echo
+        }
+
+        The du (disk usage) command measures the disk space occupied by files or directories.
+        -n	Numeric Sort: Sorts strings based on their numerical value.
+        -r	Reverse: Reverses the order of the sort.
+
+4) A function to print memory usage
+
+           memory_usage() {
+            echo "===== MEMORY USAGE ====="
+            free -h
+            echo
+        }
+
+        free -h command is used in Linux and Unix-like operating systems to display a summary of system memory usage in a human-readable format.
+
+5) A function to print top 5 CPU-consuming processes
+
+        cpu_usage() {
+            echo "===== TOP 5 CPU PROCESSES ====="
+            ps -eo pid,comm,%cpu --sort=-%cpu | head -n 6 || true
+            echo
+        }
+
+        ps -eo pid,comm,%cpu
+
+        ps = shows running processes
+        
+        Options:
+        
+        -e → show all processes
+        -o → custom output format
+        
+        Fields:
+        
+        pid → Process ID
+        comm → Command name (process name)
+        %cpu → CPU usage
+
+        --sort=-%cpu
+
+        Sorts processes by CPU usage
+        
+        %cpu → sort by CPU
+        - → descending order (highest first)
+        
+        So top CPU-consuming processes come first
+        
+6) A main function that calls all of the above with section headers
+
+        main() {
+            system_info
+            check_uptime
+            disk_usage
+            memory_usage
+            cpu_usage
+        }
+        
+        main
+
+7) Use set -euo pipefail at the top
+
+       set -euo pipefail
+
+
+OUTPUT:
+
+        ./system_info.sh 
+        ===== SYSTEM INFO =====
+        Hostname: ip-172-31-29-59
+        OS Information:
+        PRETTY_NAME="Ubuntu 24.04.4 LTS"
+        
+        ===== UPTIME =====
+        up 20 minutes
+        
+        ===== TOP 5 DISK USAGE =====
+        3.7G    /
+        1.7G    /usr
+        1017M   /snap
+        957M    /usr/lib
+        870M    /var
+        
+        ===== MEMORY USAGE =====
+                       total        used        free      shared  buff/cache   available
+        Mem:           911Mi       417Mi        99Mi       2.7Mi       598Mi       494Mi
+        Swap:             0B          0B          0B
+        
+        ===== TOP 5 CPU PROCESSES =====
+            PID COMMAND         %CPU
+            549 snapd            0.1
+              1 systemd          0.1
+            543 amazon-ssm-agen  0.1
+            121 systemd-journal  0.0
+             54 kswapd0          0.0
