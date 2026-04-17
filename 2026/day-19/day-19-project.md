@@ -40,6 +40,13 @@ Create log_rotate.sh that:
 
         exit 0
 
+OUTPUT:
+
+        ./log_rotate.sh /var/log/myapp/
+        Log rotation completed.
+        Files compressed: 2
+        Files deleted: 0
+
 
 Task 2: Server Backup Script
 
@@ -101,6 +108,16 @@ Create backup.sh that:
 
         echo 0
 
+OUTPUT:
+
+        ./backupp.sh /home/ubuntu/data/ /home/ubuntu/backups/
+        Creating backup...
+        Backup successful!
+        Archive: backup-2026-04-17.tar.gz
+        Size: 4.0K
+        Cleaning old backups...
+        Deleted 0 old backup(s).
+
 
 Task 3: Crontab
 
@@ -139,14 +156,109 @@ Create maintenance.sh that:
 
 1) Calls your log rotation function
 
+        # Import the function file
+        source ./log_rotate.sh
+        # Call the imported function and log output
+        log "Starting log rotation for $LOG_DIR..."
+        log_rotate "$LOG_DIR" >> "$LOG_FILE" 2>&1
 
+3) Calls your backup function
 
-2) Calls your backup function
+        # Import the function file
+        source ./backup.sh
+        # Call the imported function and log output
+        log "Starting backup from $BACKUP_SOURCE to $BACKUP_DEST..."
+        backup "$BACKUP_SOURCE" "BACKUP_DEST" >> "$LOG_FILE" 2>&1
 
+4) Logs all output to /var/log/maintenance.log with timestamps
 
+        log() {
+            echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+        }
 
-3) Logs all output to /var/log/maintenance.log with timestamps
+5) Write the cron entry to run it daily at 1 AM
 
+        0 1 * * * /path/to/maintainance.sh <log_directory> <backup_source> <backup_destination>
 
+CODE:
 
-4) Write the cron entry to run it daily at 1 AM
+        #!/bin/bash
+        
+        LOG_FILE="/var/log/maintenance.log"
+        
+        LOG_DIR="$1"
+        BACKUP_SOURCE="$2"
+        BACKUP_DEST="$3"
+        
+        # Import functions
+        source ./log_rotate.sh
+        source ./backupp.sh
+        
+        # Logging function
+        log() {
+            echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+        }
+        
+        # ==============================
+        # Validation
+        # ==============================
+        if [ $# -ne 3 ]; then
+            log "ERROR: Usage: $0 <log_directory> <backup_source> <backup_destination>"
+            exit 1
+        fi
+        
+        if [ ! -d "$LOG_DIR" ]; then
+            log "ERROR: Log directory does not exist: $LOG_DIR"
+            exit 1
+        fi
+        
+        if [ ! -d "$BACKUP_SOURCE" ]; then
+            log "ERROR: Backup source does not exist: $BACKUP_SOURCE"
+            exit 1
+        fi
+        
+        if [ ! -d "$BACKUP_DEST" ]; then
+            log "ERROR: Backup destination does not exist: $BACKUP_DEST"
+            exit 1
+        fi
+        
+        log "===== Maintenance Started ====="
+        
+        # ==============================
+        # Log Rotation
+        # ==============================
+        log "Starting log rotation for $LOG_DIR..."
+        log_rotate "$LOG_DIR" >> "$LOG_FILE" 2>&1
+        
+        # ==============================
+        # Backup
+        # ==============================
+        log "Starting backup from $BACKUP_SOURCE to $BACKUP_DEST..."
+        backup "$BACKUP_SOURCE" "$BACKUP_DEST" >> "$LOG_FILE" 2>&1
+        
+        # ==============================
+        # Done
+        # ==============================
+        log "===== Maintenance Completed ====="
+        
+        exit 0
+
+OUTPUT: 
+
+        ./maintainance.sh /var/log/myapp/ /home/ubuntu/data/ /home/ubuntu/backups/ 
+        
+        we get this when we cat ./maintainance.sh
+        [2026-04-17 21:13:06] ===== Maintenance Started =====
+        [2026-04-17 21:13:06] Starting log rotation for /var/log/myapp/...
+        Log rotation completed.
+        Files compressed: 0
+        Files deleted: 0
+        [2026-04-17 21:13:06] Starting backup from /home/ubuntu/data/ to /home/ubuntu/backups/...
+        Creating backup...
+        Backup successful!
+        Archive: backup-2026-04-17.tar.gz
+        Size: 4.0K
+        Cleaning old backups...
+        Deleted 0 old backup(s).
+        [2026-04-17 21:13:06] ===== Maintenance Completed =====
+
