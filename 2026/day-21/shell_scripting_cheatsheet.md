@@ -380,14 +380,195 @@ Document the most useful flags/patterns for each:
 
 3) sed — substitution, delete lines, in-place edit
 
-cut — extract columns by delimiter
+        sed (stream editor) is used to modify text non-interactively—perfect for quick edits, filtering, and transformations.
+        
+        SYNTAX:
+        sed 'command' file
+        
+        Substitution (s)
+        sed 's/error/ERROR/' app.log
+        
+        Delete Lines (d)
+        sed '3d' file.txt
+        
+        In-Place Editing (-i)
+        sed -i 's/error/ERROR/g' app.log
 
-sort — alphabetical, numerical, reverse, unique
+4) cut — extract columns by delimiter
 
-uniq — deduplicate, count
+        cut is a simple and fast command to extract specific columns (fields) or characters from text.
+        
+        SYNTAX:
+        cut [options] file
+        
+        Extract by Delimiter (-d + -f)
+        syntax:
+        cut -d "delimiter" -f field_number file
+        
+        Default Delimiter (TAB)
+        cut -f 1 file.txt
+        
+        Extract Characters (-c)
+        cut -c 1-5 file.txt
+        
+        Extract Bytes (-b)
+        cut -b 1-10 file.txt
 
-tr — translate/delete characters
+5) sort — alphabetical, numerical, reverse, unique
 
-wc — line/word/char count
+        sort is used to order lines of text—alphabetically, numerically, or in custom ways. It’s often paired with tools like uniq, cut, and awk.
+        
+        SYNTAX:
+        sort [options] file
+        
+        Alphabetical Sort
+        sort names.txt
+        
+        Numerical Sort (-n)
+        sort -n numbers.txt
+        
+        Reverse Sort (-r)
+        sort -r names.txt
+        
+        Unique Sort (-u)
+        sort -u file.txt
 
-head / tail — first/last N lines, follow mode
+6) uniq — deduplicate, count
+
+        uniq is used to filter or count duplicate lines—but there’s a catch: it only works on adjacent (consecutive) duplicates, so you usually pair it with sort.
+        
+        SYNTAX:
+        uniq [options] file
+        
+        Remove Duplicates
+        uniq file.txt
+        
+        Count Occurrences (-c)
+        sort file.txt | uniq -c
+        
+        Show Only Duplicates (-d)
+        sort file.txt | uniq -d
+        
+        Show Only Unique Lines (-u)
+        sort file.txt | uniq -u
+
+7) tr — translate/delete characters
+
+        tr (translate) is used to transform or delete characters from input. It works with standard input/output, so it’s usually used with pipes.
+        
+        SYNTAX:
+        tr [options] SET1 [SET2]
+        SET1 → characters to match
+        SET2 → characters to replace with
+        
+        Translate Characters
+        Convert lowercase → uppercase
+        echo "hello" | tr 'a-z' 'A-Z'
+        OUTPUT: HELLO
+        
+        Convert uppercase → lowercase
+        echo "HELLO" | tr 'A-Z' 'a-z'
+        OUTPUT: hello
+        
+        Delete Characters (-d)
+        echo "hello123" | tr -d '0-9'
+        OUTPUT: hello
+
+8) wc — line/word/char count
+
+        wc (word count) is used to count lines, words, and characters in files or input.
+        
+        SYNTAX:
+        wc [options] file
+        
+        Default Output
+        wc file.txt
+        
+        Output format:
+        lines  words  bytes  filename
+        
+        Example:
+        10  50  300 file.txt
+        
+        -l (line count)
+        wc -l file.txt
+        
+        -w (word count)
+        wc -w file.txt
+        
+        -m (character count)
+        wc -m file.txt
+
+9) head / tail — first/last N lines, follow mode
+
+        head — First N Lines
+        
+        SYNTAX:
+        head file.txt
+        
+        tail — Last N Lines
+        
+        SYNTAX:
+        tail file.txt
+
+
+Task 6: Useful Patterns and One-Liners
+
+Include at least 5 real-world one-liners you find useful. Examples:
+
+Find and delete files older than N days
+Count lines in all .log files
+Replace a string across multiple files
+Check if a service is running
+Monitor disk usage with alerts
+Parse CSV or JSON from command line
+Tail a log and filter for errors in real time
+
+Task 7: Error Handling and Debugging
+
+Document with examples:
+
+1) Exit codes — $?, exit 0, exit 1
+
+        $? → last command status
+        0 → success
+        1 → failure
+        exit N → set script exit status
+
+2) set -e — exit on error
+
+        set -e is a Bash option that makes your script exit immediately if any command fails (i.e., returns a non-zero exit code).
+
+3) set -u — treat unset variables as error
+
+        set -u (aka set -o nounset) makes Bash error out when you use an unset variable. It helps catch typos and missing inputs early instead of silently using empty strings.
+
+4) set -o pipefail — catch errors in pipes
+
+        set -o pipefail fixes a subtle but important problem with pipelines: by default, Bash only returns the exit status of the last command in a pipe.
+
+5) set -x — debug mode (trace execution)
+
+        set -x turns on debug (trace) mode in Bash. It prints each command before it runs, after variable expansion—great for understanding what your script is actually doing.
+
+6) Trap — trap 'cleanup' EXIT
+
+        trap lets you run commands automatically when a script exits or receives signals. It’s commonly used for cleanup (temp files, locks, background processes).
+        
+        SYNTAX:
+        trap 'commands' SIGNAL
+
+
+Task 8: Bonus — Quick Reference Table
+
+Create a summary table like this at the top of your cheat sheet:
+
+Topic	        Key Syntax	        Example
+Variable	VAR="value"	        NAME="DevOps"
+Argument	$1, $2	                ./script.sh arg1
+If	        if [ condition ]; then	if [ -f file ]; then
+For loop	for i in list; do	for i in 1 2 3; do
+Function	name() { ... }	        greet() { echo "Hi"; }
+Grep	       grep pattern file	grep -i "error" log.txt
+Awk	     awk '{print $1}' file	awk -F: '{print $1}' /etc/passwd
+Sed 	     sed 's/old/new/g' file   	sed -i 's/foo/bar/g' config.txt
