@@ -564,11 +564,11 @@ Task 8: Bonus — Quick Reference Table
 Create a summary table like this at the top of your cheat sheet:
 
         Topic	        Key Syntax	        Example
-        Variable	VAR="value"	        NAME="DevOps"
-        Argument	$1, $2	                ./script.sh arg1
-        If	        if [ condition ]; then	if [ -f file ]; then
-        For loop	for i in list; do	for i in 1 2 3; do
-        Function	name() { ... }	        greet() { echo "Hi"; }
-        Grep	       grep pattern file	grep -i "error" log.txt
-        Awk	     awk '{print $1}' file	awk -F: '{print $1}' /etc/passwd
-        Sed 	     sed 's/old/new/g' file   	sed -i 's/foo/bar/g' config.txt
+        Variable	 VAR="value"	         NAME="DevOps"
+        Argument	$1, $2	                 ./script.sh arg1
+        If	        if [ condition ]; then	    if [ -f file ]; then
+        For loop	for i in list; do	   for i in 1 2 3; do
+        Function	name() { ... }	         greet() { echo "Hi"; }
+        Grep	       grep pattern file	 grep -i "error" log.txt
+        Awk	     awk '{print $1}' file	 awk -F: '{print $1}' /etc/passwd
+        Sed 	     sed 's/old/new/g' file   	 sed -i 's/foo/bar/g' config.txt
