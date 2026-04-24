@@ -517,11 +517,17 @@ Task 6: Useful Patterns and One-Liners
 Include at least 5 real-world one-liners you find useful. Examples:
 
 Find and delete files older than N days
+
 Count lines in all .log files
+
 Replace a string across multiple files
+
 Check if a service is running
+
 Monitor disk usage with alerts
+
 Parse CSV or JSON from command line
+
 Tail a log and filter for errors in real time
 
 Task 7: Error Handling and Debugging
