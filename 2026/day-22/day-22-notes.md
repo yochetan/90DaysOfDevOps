@@ -1,0 +1,93 @@
+Task 1: Install and Configure Git
+
+1) Verify Git is installed on your machine
+
+        git --version
+
+2) Set up your Git identity — name and email
+
+        git config --global user.name "<name>"
+        git config --global user.email "<email>"
+
+3) Verify your configuration
+
+        git config --list : Displays the current git configuration
+
+
+Task 2: Create Your Git Project
+
+1) Create a new folder called devops-git-practice
+
+        mkdir devops-git-practice
+
+2) Initialize it as a Git repository
+
+        git init
+
+3) Check the status — read and understand what Git is telling you
+
+        git status
+        On branch master
+        
+        No commits yet
+
+        nothing to commit (create/copy files and use "git add" to track)
+
+4) Explore the hidden .git/ directory — look at what's inside
+
+        to see .git : ls -a
+        
+        inside .git
+        HEAD  branches  config  description  hooks  info  objects  refs
+
+Task 3: Create Your Git Commands Reference
+
+1) Create a file called git-commands.md inside the repo
+
+2) Add the Git commands you've used so far, organized by category:
+    Setup & Config
+    Basic Workflow
+    Viewing Changes
+
+3) For each command, write:
+    What it does (1 line)
+    An example of how to use it
+
+Task 4: Stage and Commit
+
+1) Stage your file
+        
+        git add raj.txt
+        git add simran.txt
+
+2) Check what's staged
+
+        git status
+        On branch master
+        
+        No commits yet
+        
+        Changes to be committed:
+          (use "git rm --cached <file>..." to unstage)
+                new file:   raj.txt
+                new file:   simran.txt
+
+3) Commit with a meaningful message
+
+        git commit -m "initial commit"
+
+4) View your commit history
+
+        git log
+
+
+Task 5: Make More Changes and Build History
+
+1) Edit git-commands.md — add more commands as you discover them
+
+2) Check what changed since your last commit
+
+3) Stage and commit again with a different, descriptive message
+
+4) Repeat this process at least 3 times so you have multiple commits in your history
+View the full history in a compact format
