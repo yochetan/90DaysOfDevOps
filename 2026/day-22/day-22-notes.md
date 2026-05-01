@@ -45,11 +45,14 @@ Task 3: Create Your Git Commands Reference
 1) Create a file called git-commands.md inside the repo
 
 2) Add the Git commands you've used so far, organized by category:
+
     Setup & Config
+
     Basic Workflow
+
     Viewing Changes
 
-3) For each command, write:
+4) For each command, write:
     What it does (1 line)
     An example of how to use it
 
