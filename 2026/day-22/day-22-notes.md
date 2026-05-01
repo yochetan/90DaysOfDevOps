@@ -94,3 +94,37 @@ Task 5: Make More Changes and Build History
 
 4) Repeat this process at least 3 times so you have multiple commits in your history
 View the full history in a compact format
+
+
+Task 6: Understand the Git Workflow
+Answer these questions in your own words (add them to a day-22-notes.md file):
+
+1) What is the difference between git add and git commit?
+
+        git add : is used to staged from untracked (file/directory)
+        git commit : is used to commit(tracked) from staged
+
+2) What does the staging area do? Why doesn't Git just commit directly?
+
+        staging area : instead of commiting all the changes you can select specific files which you wanna prepare for commit
+        
+        Why Git doesn’t commit directly
+        If Git skipped the staging area and committed everything instantly, you’d lose a lot of control.
+
+3) What information does git log show you?
+
+        git log : it shows all the commit history made 
+
+4) What is the .git/ folder and what happens if you delete it?
+
+        .git/ : this is the folder where all the stuffs are stored ig
+        
+        if we delete that folder : it deletes the the git repo entirely
+
+5) What is the difference between a working directory, staging area, and repository?
+
+        WORKING DIRECTORY : this is the file system directory (if we haven't commited to the git and we delete the file it is completely deleted and can't be recovered)
+        
+        STAGING AREA : this is were we staged the files which we want before commit ( this is imp as we select which files are ready for commit )
+        
+        REPOSITORY : this is the repo/directory of git (where we can stored our files/directories and can recover if they are deleted from the file system)
