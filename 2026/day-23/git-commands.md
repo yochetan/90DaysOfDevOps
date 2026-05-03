@@ -27,12 +27,20 @@ Viewing Changes
 Branch commands
 
     git branch
+    
     git branch -a
+    
     git branch -r
+    
     git branch feature-1 : this creates a new branch called feature-1
+    
     git checkout feature-1 : this swtiches to feature-1
+    
     git checkout -b feature-2 : Creates a new branch and switch to it
+    
     git switch → only for switching branches (simple & clear)
+    
     git checkout → does multiple things (switch branches, restore files, etc.)
+    
     git branch -d feature-2 : deletes the branch (in this feature-2)
 
