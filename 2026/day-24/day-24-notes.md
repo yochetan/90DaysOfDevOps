@@ -173,11 +173,153 @@ Task 3: Squash Commit vs Merge Commit
 
 3) Check git log — how many commits were added to main?
 
+        ig which i committed with a message that only
+        and the file is also there
 
+4) Now create another branch feature-settings, add a few commits
 
-Now create another branch feature-settings, add a few commits
-Merge it into main without --squash (regular merge) — compare the history
+        git checkout -b feature-settings
+        added 3 commits
+
+5) Merge it into main without --squash (regular merge) — compare the history
+
+        git merge feature-settings
+        it got fast-forwarded merge and all the commits messages are visible into main from feature-settings
+
 Answer in your notes:
 What does squash merging do?
+
+        In Git, squash merging combines all commits from a branch into one single commit before merging.
+        
+        What it does
+        Takes multiple commits → turns them into one commit
+        Adds that single commit to the target branch (like main)
+        Keeps history clean and simple
+        Example
+        
+        Before:
+        
+        feature: A---B---C
+        main:    D
+        
+        After squash merge:
+        
+        main: D---X   (X = combined A+B+C)
+
 When would you use squash merge vs regular merge?
+
+        Use squash merge when:
+        Your branch has many small or messy commits
+        You want one clean commit in main
+        It’s a feature or PR where detailed history isn’t important
+        
+        👉 Keeps the main branch simple and readable
+        
+        Use regular merge when:
+        You want to keep all commit history
+        The commits are meaningful and well-structured
+        You’re working in a team and need full traceability
+        
+        👉 Preserves how the work actually happened
+
 What is the trade-off of squashing?
+
+        You get a clean history, but lose detailed commit information.
+        
+        What you gain
+        Simple, easy-to-read history
+        One clean commit instead of many
+        What you lose
+        Individual commit details (who did what step-by-step)
+        Harder to debug or trace changes later
+        Blame/history becomes less granular
+
+Task 4: Git Stash — Hands-On
+
+1) Start making changes to a file but do not commit
+
+        git switch feature-login
+        vim login.txt
+
+2) Now imagine you need to urgently switch to another branch — try switching. What happens?
+
+        made some changes in the files but didn't committed cause the work wasn't completed and had to change into main for some urgent work
+
+3) Use git stash to save your work-in-progress
+        
+        git stash 
+        did this in the branch which i was working so i don't wanna commit it cause the work wasn't completed
+
+4) Switch to another branch, do some work, switch back
+
+        git switch feature-settings
+        did some urgent changes init and committed
+
+5) Apply your stashed changes using git stash pop
+        
+        git stash pop
+
+6) Try stashing multiple times and list all stashes
+
+        echo "change: 1" >> file.txt
+        git stash
+        this above in one branch
+        
+        echo "change: 2" >> file.txt
+        git stash
+        in another branch
+        
+        echo "change: 3" >> file.txt
+        git stash
+        in one more another branch
+        
+        git stash list
+
+7) Try applying a specific stash from the list
+
+        git stash apply stash@{0}
+
+In Short
+
+        git stash list → see all stashes
+        git stash apply stash@{n} → apply specific one
+        git stash pop → apply + remove
+
+Answer in your notes:
+What is the difference between git stash pop and git stash apply?
+        
+        🔹git stash apply
+        Applies the stash
+        Keeps it in the stash list
+        
+        🔹 git stash pop
+        Applies the stash
+        Removes it from the stash list
+
+When would you use stash in a real-world workflow?
+
+        when i don't wanna commit cause the work hasn't been completed and have to change the directory for some urgent wotk
+
+Task 5: Cherry Picking
+
+1) Create a branch feature-hotfix, make 3 commits with different changes
+
+        git checkout -b feature-hotfix
+        made 3 commits
+
+2) Switch to main
+
+        git checkout main
+
+3) Cherry-pick only the second commit from feature-hotfix onto main
+        
+        git cherry-pick <commitid>
+
+4) Verify with git log that only that one commit was applied
+
+
+
+Answer in your notes:
+What does cherry-pick do?
+When would you use cherry-pick in a real project?
+What can go wrong with cherry-picking?
