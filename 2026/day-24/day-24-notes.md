@@ -313,13 +313,43 @@ Task 5: Cherry Picking
 
 3) Cherry-pick only the second commit from feature-hotfix onto main
         
-        git cherry-pick <commitid>
+        git cherry-pick 319f699
 
 4) Verify with git log that only that one commit was applied
 
+        this is of feature-hotfix
+        git log --oneline
+        8e5c98d (HEAD -> feature-hotfix) chore: updated a value
+        cae2b35 feat: added a cool feature
+        4de7ff9 chore:fixed a bug
+        1e7c8b9 some changes
+        350539c minor changes
+        66cdf27 created hotfix file
+        221174b (origin/main, origin/HEAD) Initial commit
 
+        this is of main
+        git log --oneline
+        319f699 (HEAD -> main) feat: added a cool feature
+        7e85adb Merge branch 'feature-hotfix'
+        f90f7c2 created a normal file
+        1e7c8b9 some changes
+        350539c minor changes
+        66cdf27 created hotfix file
+        221174b (origin/main, origin/HEAD) Initial commit   
 
 Answer in your notes:
 What does cherry-pick do?
+        
+        Copies one (or more) selected commit(s)
+        Applies them on your current branch
+        Creates a new commit with the same changes
+
 When would you use cherry-pick in a real project?
+
+        when the final work is completed and dont need the previous commits
+        use cherry-pick when you need one specific commit without merging the entire branch
+
 What can go wrong with cherry-picking?
+
+        Cherry-pick is useful for small fixes, but overusing it can make history messy.
+        In short: cherry-picking can create conflicts, duplicate commits, and confusing history.
