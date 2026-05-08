@@ -159,32 +159,201 @@ When/where it's used
 Pros and cons
 1) GitFlow — develop, feature, release, hotfix branches
 
+        How it works
+        
+        Git Flow uses multiple long-running branches:
+        
+        main → production-ready code
+        develop → active development
+        feature/* → new features
+        release/* → preparing releases
+        hotfix/* → urgent production fixes
+        
+        Developers create feature branches from develop, then merge back after completion.
+        
+        Simple Flow
+        main -----------R-----------H
+                        \         /
+                         release--
+                        /
+         develop ------F1-----F2------
+                      /  \    / \
+                 feature feature feature
+        
+        When/Where it's used :
+        Large teams
+        Enterprise applications
+        Projects with scheduled releases
+        Long development cycles
+        
+        Pros :
+        Organized workflow
+        Clear separation between development and production
+        Good for release management
+        Supports hotfixes cleanly
+        
+        Cons : 
+        Complex for beginners
+        Too many branches
+        Slower workflow
+        Not ideal for continuous deployment
+
 2) GitHub Flow — simple, single main branch + feature branches
+        
+        How it works
+        
+        A simple workflow:
+        
+        main always stays deployable
+        Create a feature branch from main
+        Open Pull Request
+        Review + merge back into main
+        Deploy immediately
+        
+        Simple Flow
+        
+        main -----------M-----------M
+              \         /
+               feature-
+        
+        When/Where it's used : 
+        Web applications
+        Startups
+        Continuous deployment environments
+        Small to medium teams
+        
+        Pros : 
+        Very simple
+        Fast development
+        Easy collaboration
+        Great for CI/CD
+        
+        Cons : 
+        Less structured
+        Harder for large release cycles
+        Not ideal for multiple production versions
 
 3) Trunk-Based Development — everyone commits to main, short-lived branches
+        
+        How it works
+        
+        Developers work on short-lived branches or directly on main (trunk). Changes are merged frequently in small batches.
+        
+        Feature flags are commonly used to hide unfinished work.
+        
+        Simple Flow
+        
+        main ---A---B---C---D---E
+                 \ / \ /
+               small short branchesSimple Flow
+        
+        When/Where it's used : 
+        
+        High-speed DevOps teams
+        Continuous integration environments
+        Large tech companies
+        Agile development
+        
+        Pros :
+        
+        Very fast integration
+        Fewer merge conflicts
+        Encourages continuous testing
+        Great for CI/CD
+        
+        Cons : 
+        
+        Requires strong automated testing
+        Risky without discipline
+        Hard for teams unfamiliar with CI/CD
 
 4) Answer:
 Which strategy would you use for a startup shipping fast?
+        
+        I would use GitHub Flow.
+        
+        Why?
+        Simple workflow
+        Fast feature delivery
+        Easy pull request process
+        Works great with CI/CD and continuous deployment
+        Typical flow
+        main → feature branch → pull request → merge → deploy
+        
+        👉 Best for startups where speed and rapid iteration matter most.
 
 Which strategy would you use for a large team with scheduled releases?
+        
+        I would use Git Flow.
+        
+        Why?
+        Clear separation of development and production
+        Supports release branches and hotfixes
+        Good for planned release cycles and enterprise teams
+        Typical flow
+        feature → develop → release → main
+        
+        👉 Best for organizations with structured testing and scheduled releases.
 
 Which one does your favorite open-source project use? (check any repo on GitHub)
 
+        Example: TensorFlow GitHub Repository (https://github.com/tensorflow/tensorflow?utm_source=chatgpt.com)
+        
+        TensorFlow mainly follows a workflow similar to GitHub Flow:
+        
+        Developers create feature branches/forks
+        Submit Pull Requests
+        Review before merging into main
+        
+        This is common in many open-source projects on GitHub.
 
 Task 5: Git Commands Reference Update
 
 Update your git-commands.md to cover everything from Days 22–25:
 
-Setup & Config
+* Setup & Config
+        
+        git config --global user.name "<name>" 
+        
+        git config --global user.email "<email>" 
 
 Basic Workflow (add, commit, status, log, diff)
 
+        git add file.extension
+        git commit -m "Message"
+        git status
+        git log
+        git log --oneline
+        git diff
+
 Branching (branch, checkout, switch)
+
+        git branch
+        git branch feature
+        git checkout -b feature
+        git checkout feature
+        git switch feature
 
 Remote (push, pull, fetch, clone, fork)
 
+        git push origin main
+        git pull origin main
+        git clone <url>
+        fork idk
+
 Merging & Rebasing
 
+        git merge branchname
+        git rebase main
+
 Stash & Cherry Pick
+        
+        git stash
+        git stash pop
+        git stash --list
+        git cherry-pick <commitID>
 
 Reset & Revert
+        
+        git reset <commitID>
+        git revert <commitID>
