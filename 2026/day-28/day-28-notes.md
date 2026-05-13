@@ -577,13 +577,13 @@ Pull Changes
 
 4. Clone vs Fork
 
-+------------------------------+-----------------------------------+
-| Clone                        | Fork                              |
-+------------------------------+-----------------------------------+
-| Copies repo to local machine | Creates copy on GitHub            |
-| Used for local development   | Used for independent contribution |
-| Command: git clone           | Done using GitHub UI              |
-+------------------------------+-----------------------------------+
+        +------------------------------+-----------------------------------+
+        | Clone                        | Fork                              |
+        +------------------------------+-----------------------------------+
+        | Copies repo to local machine | Creates copy on GitHub            |
+        | Used for local development   | Used for independent contribution |
+        | Command: git clone           | Done using GitHub UI              |
+        +------------------------------+-----------------------------------+
 
 Clone Example
 
