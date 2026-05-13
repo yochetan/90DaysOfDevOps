@@ -7,14 +7,14 @@ Go through the checklist below. For each item, mark yourself honestly:
 
 Linux
 
-** Navigate the file system, create/move/delete files and directories
+* Navigate the file system, create/move/delete files and directories
 
-    mkdir folder 
-    touch file
-    cp source dest
-    mv source dest
-    rm file
- 
+        mkdir folder 
+        touch file
+        cp source dest
+        mv source dest
+        rm file
+     
  Manage processes — list, kill, background/foreground
  Work with systemd — start, stop, enable, check status of services
  Read and edit text files using vi/vim or nano
