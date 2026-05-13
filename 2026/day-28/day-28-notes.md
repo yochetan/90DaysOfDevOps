@@ -521,3 +521,77 @@ Cron Format
         | +---------- Hour
         +------------ Minute
 
+Git & Github
+
+1. Initialize a Repo, Stage, Commit, View History
+
+Initialize Repository
+
+        git init
+
+Stage Files
+
+        git add file.txt
+        git add .
+
+Commit Changes
+
+        git commit -m "Initial commit"
+
+View History
+        
+        git log
+        git log --oneline
+
+2. Create and Switch Branches
+
+Create Branch
+
+        git branch feature-login
+        
+Switch Branch
+
+        git switch feature-login
+
+Create + Switch
+
+        git switch -c feature-login
+
+List Branches
+
+        git branch
+
+3. Push to and Pull from GitHub
+
+Add Remote
+
+        git remote add origin https://github.com/username/repo.git
+
+Push Code
+
+        git push -u origin main
+
+Pull Changes
+
+        git pull origin main
+
+4. Clone vs Fork
+
++------------------------------+-----------------------------------+
+| Clone                        | Fork                              |
++------------------------------+-----------------------------------+
+| Copies repo to local machine | Creates copy on GitHub            |
+| Used for local development   | Used for independent contribution |
+| Command: git clone           | Done using GitHub UI              |
++------------------------------+-----------------------------------+
+
+Clone Example
+
+        git clone https://github.com/user/repo.git
+
+5. Merge Branches
+
+Merge Feature Branch
+
+        git switch main
+        git merge feature-login
