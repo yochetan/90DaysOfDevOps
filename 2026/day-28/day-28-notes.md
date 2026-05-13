@@ -595,3 +595,219 @@ Merge Feature Branch
 
         git switch main
         git merge feature-login
+
+Fast-Forward Merge
+
+No new commits on main:
+        
+        A---B---C
+                 \
+                  D---E
+
+Main pointer simply moves forward.
+
+Merge Commit
+
+Both branches changed:
+
+        A---B---C-------M
+             \         /
+              D---E---F
+
+Git creates merge commit M.
+
+6. Rebase
+
+Rebase Branch
+        
+        git switch feature
+        git rebase main
+
+What Rebase Does - Moves your commits on top of latest main.
+
+Before:
+        
+        A---B---C
+             \
+              D---E
+
+After:
+        
+        A---B---C---D'---E'
+        
+Merge vs Rebase
+        
+        +----------------------+------------------------+
+        | Merge                | Rebase                 |
+        +----------------------+------------------------+
+        | Preserves history    | Creates linear history |
+        | Safe for teams       | Rewrites commits       |
+        | Creates merge commit | No merge commit        |
+        +----------------------+------------------------+
+
+When to Use
+        
+        Merge → shared branches
+        Rebase → local cleanup
+
+7. git stash
+
+Save Changes
+
+        git stash
+
+List Stashes
+
+        git stash list
+
+Apply Stash
+
+        git stash apply
+
+Pop Stash
+
+        git stash pop
+
+pop applies + removes stash.
+
+8. Cherry-Pick
+
+Copy Specific Commit
+
+        git cherry-pick commit_id
+
+Use Case - Apply one bug fix from another branch without merging everything.
+
+9. Squash Merge vs Regular Merge
+
+Squash Merge - Combines all commits into one.
+
+Before:
+        
+        A---B---C
+
+After:
+
+        X
+
+Regular Merge - Keeps all commit history.
+
+Comparison
+
+        +---------------+------------------+
+        | Squash Merge  | Regular Merge    |
+        +---------------+------------------+
+        | Clean history | Full history     |
+        | One commit    | Multiple commits |
+        | Simpler log   | Detailed log     |
+        +---------------+------------------+
+
+10. git reset
+
+Soft Reset
+
+        git reset --soft HEAD~1
+        
+* Removes commit
+* Keeps staged changes
+
+Mixed Reset
+
+        git reset --mixed HEAD~1
+
+* Removes commit
+* Keeps unstaged changes
+
+Hard Reset
+
+        git reset --hard HEAD~1
+
+* Removes commit
+* Deletes all changes
+
+11. git revert
+
+Revert Commit
+
+        git revert commit_id
+
+Creates new commit that undoes changes.
+
+reset vs revert
+
+        +----------------------------+--------------------------+
+        | reset                      | revert                   |
+        +----------------------------+--------------------------+
+        | Rewrites history           | Preserves history        |
+        | Unsafe for shared branches | Safe for shared branches |
+        +----------------------------+--------------------------+
+
+12. Branching Strategies
+
+GitFlow
+
+Uses:
+
+        main
+        develop
+        feature
+        release
+        hotfix
+
+Best for:
+        
+        enterprise projects
+        scheduled releases
+
+GitHub Flow
+
+Simple:
+
+        main → feature branch → PR → merge
+
+Best for:
+        
+        startups
+        CI/CD
+        fast deployment
+
+Trunk-Based Development
+
+Short-lived branches merged quickly into main.
+
+Best for:
+        
+        DevOps
+        continuous integration
+
+13. GitHub CLI
+
+Using GitHub CLI
+
+Login
+
+        gh auth login
+
+Create Repo
+
+        gh repo create demo-repo
+
+Clone Repo
+
+        gh repo clone username/demo-repo
+
+Create Pull Request
+
+        gh pr create
+
+View PRs
+
+        gh pr list
+
+Create Issue
+
+        gh issue create
+
+List Issues
+
+        gh issue list
