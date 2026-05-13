@@ -276,7 +276,7 @@ Example:
         | 5432         | PostgreSQL |
         | 6379         | Redis      |
 
-Shell Scripting
+## Shell Scripting
 
 1. Script with Variables, Arguments, and User Input
 
@@ -521,7 +521,7 @@ Cron Format
         | +---------- Hour
         +------------ Minute
 
-Git & Github
+## Git & Github
 
 1. Initialize a Repo, Stage, Commit, View History
 
