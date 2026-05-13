@@ -5,7 +5,7 @@ Go through the checklist below. For each item, mark yourself honestly:
 * Need to revisit
 * Haven't done yet
 
-#Linux
+##Linux
 
 1. Navigate the File System
 
