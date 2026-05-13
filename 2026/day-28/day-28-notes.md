@@ -7,29 +7,6 @@ Go through the checklist below. For each item, mark yourself honestly:
 
 Linux
 
-* Navigate the file system, create/move/delete files and directories
-
-        mkdir folder 
-        touch file
-        cp source dest
-        mv source dest
-        rm file
-     
- * Manage processes — list, kill, background/foreground
-
-
- 
- Work with systemd — start, stop, enable, check status of services
- Read and edit text files using vi/vim or nano
- Troubleshoot CPU, memory, and disk issues using top, free, df, du
- Explain the Linux file system hierarchy (/, /etc, /var, /home, /tmp, etc.)
- Create users and groups, manage passwords
- Set file permissions using chmod (numeric and symbolic)
- Change file ownership with chown and chgrp
- Create and manage LVM volumes
- Check network connectivity — ping, curl, netstat, ss, dig, nslookup
- Explain DNS resolution, IP addressing, subnets, and common ports
-
 1. Navigate the File System
 
 Basic Commands
@@ -298,3 +275,249 @@ Example:
         | 3306         | MySQL      |
         | 5432         | PostgreSQL |
         | 6379         | Redis      |
+
+Shell Scripting
+
+1. Script with Variables, Arguments, and User Input
+
+Example Script
+
+        #!/bin/bash
+        
+        name=$1
+        
+        echo "Enter your city:"
+        read city
+        
+        echo "Hello $name from $city"
+
+Run Script
+        
+        chmod 764 script.sh
+        ./script.sh Chetan
+
+Important Variables   
+        
+        |---------------------|--------------------------|
+        | Variable            | Meaning                  |
+        | $0                  | Script name              |
+        | $1                  | First argument           |
+        | $2                  | Second argument          |
+        | $#                  | Number of arguments      |
+        | $@                  | All arguments            |
+        | $?                  | Last command exit status |
+
+2. if / elif / else
+
+Example
+
+        #!/bin/bash
+        
+        num=10
+        
+        if [ $num -gt 5 ]; then
+            echo "Greater than 5"
+        elif [ $num -eq 5 ]; then
+            echo "Equal to 5"
+        else
+            echo "Less than 5"
+        fi
+
+3. case Statement
+
+Example
+
+        #!/bin/bash
+        
+        echo "Enter option:"
+        read option
+        
+        case $option in
+            start)
+                echo "Starting service"
+                ;;
+            stop)
+                echo "Stopping service"
+                ;;
+            restart)
+                echo "Restarting service"
+                ;;
+            *)
+                echo "Invalid option"
+                ;;
+        esac
+
+4. for Loop
+
+Example
+
+        #!/bin/bash
+        
+        for i in 1 2 3 4 5
+        do
+            echo "Number: $i"
+        done
+
+5. while Loop
+
+Example
+
+        #!/bin/bash
+        
+        count=1
+        
+        while [ $count -le 5 ]
+        do
+            echo $count
+            ((count++))
+        done
+
+6. until Loop
+
+Example
+
+        #!/bin/bash
+        
+        count=1
+        
+        until [ $count -gt 5 ]
+        do
+            echo $count
+            ((count++))
+        done
+
+7. Functions
+
+Example
+        
+        #!/bin/bash
+        
+        greet() {
+            echo "Hello $1"
+        }
+        
+        greet Chetan
+
+Function Return Value
+
+        #!/bin/bash
+        
+        add() {
+            return $(($1 + $2))
+        }
+        
+        add 2 3
+        echo $?
+
+8. grep
+
+Search Text
+
+        grep "ERROR" logfile.txt
+
+Ignore Case
+
+        grep -i "error" logfile.txt
+
+9. awk
+
+Print Columns
+
+        awk '{print $1, $3}' file.txt
+
+Sum Values
+
+        awk '{sum += $1} END {print sum}' numbers.txt
+
+10. sed
+
+Replace Text
+
+        sed 's/apple/orange/g' file.txt
+
+Delete Line
+
+        sed '2d' file.txt
+
+11. sort
+
+Alphabetical Sort
+
+        sort names.txt
+
+Reverse Sort
+
+        sort -r names.txt
+
+12. uniq
+
+Remove Duplicate Lines
+
+        uniq file.txt
+
+Count Duplicates
+
+        uniq -c file.txt
+
+13. Combined Text Processing Example
+
+Find Top Errors
+
+        grep "ERROR" logfile.txt | awk '{print $5}' | sort | uniq -c | sort -rn
+
+14. Error Handling
+
+set -e - Exit script if any command fails.
+
+        set -e
+
+set -u - Treat unset variables as errors.
+
+        set -u
+
+set -o pipefail - Catch errors in pipelines.
+
+        set -o pipefail
+15. trap
+
+Cleanup on Exit
+
+        trap 'echo Cleanup done' EXIT
+
+16. Full Safe Script Example
+        
+        #!/bin/bash
+        
+        set -e
+        set -u
+        set -o pipefail
+        
+        trap 'echo Script failed' ERR
+        
+        echo "Running safely"
+
+17. Schedule Scripts with Crontab
+
+Open Crontab
+
+        crontab -e
+
+Run Every Day at 2 AM
+
+        0 2 * * * /home/ubuntu/backup.sh
+
+Run Every 5 Minutes
+
+        */5 * * * * /home/ubuntu/check.sh
+
+Cron Format
+
+        * * * * *
+        - - - - -
+        | | | | |
+        | | | | +---- Day of Week
+        | | | +------ Month
+        | | +-------- Day of Month
+        | +---------- Hour
+        +------------ Minute
+
