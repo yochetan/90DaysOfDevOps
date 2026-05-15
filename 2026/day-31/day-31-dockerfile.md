@@ -127,16 +127,87 @@ Task 4: Build a Simple Web App Image
 Task 5: .dockerignore
 
 1) Create a .dockerignore file in one of your project folders
-
+        
+        touch .dockeringore
 
 2) Add entries for: node_modules, .git, *.md, .env
 
+        mkdir node_modules
+        git clone git@github.com:yochetan/test_repo.git
+        got the md file from github repo(test_repo)
+        touch .env
 
 3) Build the image — verify that ignored files are not included
+
+        docker build -t my-website:v2 .
+        docker run -d -p 8081:80 --name test-ignore my-website:v2
+        
+        docker exec -it test-ignore sh
+        
+        ls -la /usr/share/nginx/html
 
 
 Task 6: Build Optimization
 
 1) Build an image, then change one line and rebuild — notice how Docker uses cache
+
+        docker build -t my-website:v1 .
+        
+        => CACHED [1/2] FROM nginx:alpine
+        => [2/2] COPY index.html ...
+        
+        Now change one line in index.html.
+        
+        example:
+        <h1>Hello Docker Cache 🚀</h1>
+        
+        rebuild
+        docker build -t my-website:v2 .
+        
+        This time Docker reuses the cached FROM nginx:alpine layer and only rebuilds the COPY layer because that file changed.
+
 2) Reorder your Dockerfile so that frequently changing lines come last
+
+Bad Dockerfile order:
+
+        FROM node:alpine
+        
+        COPY . .
+        
+        RUN npm install
+        
+        CMD ["npm", "start"]
+
+Problem:
+
+        Every time any file changes, Docker reruns npm install.
+        Builds become slow.
+
+Better Dockerfile order:
+
+        FROM node:alpine
+        
+        COPY package*.json ./
+        
+        RUN npm install
+        
+        COPY . .
+        
+        CMD ["npm", "start"]
+
+Why this is faster:
+
+        package.json changes less often than application code.
+        Docker caches the npm install layer.
+        When only source files change, Docker skips reinstalling dependencies.
+
 3) Write in your notes: Why does layer order matter for build speed?
+        
+        Docker builds images layer by layer.
+        
+        Each instruction in a Dockerfile creates a cached layer.
+        If a layer changes, Docker rebuilds that layer and all layers after it.
+        
+        Putting frequently changing instructions near the bottom improves build speed because earlier layers can be reused from cache.
+        Expensive steps like package installation should come before copying frequently changing source code.
+
