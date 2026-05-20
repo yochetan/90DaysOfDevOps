@@ -149,8 +149,127 @@ Verify: docker volume ls, docker volume inspect
 
 
 Task 3: Bind Mounts
-Create a folder on your host machine with an index.html file
-Run an Nginx container and bind mount your folder to the Nginx web directory
-Access the page in your browser
-Edit the index.html on your host — refresh the browser
+
+1) Create a folder on your host machine with an index.html file
+        
+        mkdir project
+        vim index.html
+
+2) Run an Nginx container and bind mount your folder to the Nginx web directory
+        
+        docker run -d -v /home/ubuntu/project:/usr/share/nginx/html -p 80:80 nginx:alpine
+
+3) Access the page in your browser
+
+output on the web page 
+
+        Welcome to My Docker Website
+        This website is running inside an Nginx container.
+
+4) Edit the index.html on your host — refresh the browser
+        
+        added a heading and refresed the site and the updated html was seen on the web browser
+
 Write in your notes: What is the difference between a named volume and a bind mount?
+
+Bind Mount:
+
+        - Maps a specific folder/file from the host machine into the container
+        - Changes on the host appear instantly inside the container
+        - Commonly used for development
+        - Depends on host filesystem paths
+
+Named Volume:
+
+        - Managed entirely by Docker
+        - Stored in Docker’s internal storage area
+        - Better for persistent application data like databases
+        - More portable and isolated from the host filesystem
+
+Example:
+
+Bind Mount:
+        
+        -v $(pwd):/app
+
+Named Volume:
+
+        -v mydata:/app/data
+
+
+Task 4: Docker Networking Basics
+
+1) List all Docker networks on your machine
+        
+        docker network ls
+
+2) Inspect the default bridge network
+        
+        docker network inspect bridge
+
+3) Run two containers on the default bridge — can they ping each other by name?
+4) Run two containers on the default bridge — can they ping each other by IP?
+Default bridge network:
+
+        - Containers CAN communicate using IP addresses
+        - Containers CANNOT usually resolve each other by container name
+
+Reason:
+
+        The default bridge network does not include automatic DNS service discovery.
+        Container name resolution works properly on user-defined bridge networks.
+
+
+Task 5: Custom Networks
+
+1) Create a custom bridge network called my-app-net
+        
+        docker network create my-app-net
+
+2) Run two containers on my-app-net
+
+        docker run -d --name c1 --network my-app-net alpine
+        docker run -d --name c2 --network my-app-net alpine
+
+3) Can they ping each other by name now?
+
+        yes, because the network is same for the both 
+        Because user-defined bridge networks include built-in DNS resolution.
+        
+        docker exec c1 ping c2
+
+4) Write in your notes: Why does custom networking allow name-based communication but the default bridge doesn't?
+        
+        the custom networking allows name-based communication because it has in-built DNS resolution
+        AND
+        the default bridge doesn't allows cause id does not include automatic DNS service discovery.
+
+
+Task 6: Put It Together
+
+1) Create a custom network
+        
+        docker network create prac-net
+
+2) Run a database container (MySQL/Postgres) on that network with a volume for data
+
+        docker run -d -v mysql-data:/var/lib/mysql --name mysql-db --network prac-net -e MYSQL_ROOT_PASSWORD=root mysql:latest
+
+3) Run an app container (use any image) on the same network
+
+        docker run -dit --name app-container --network prac-net alpine sh
+
+4) Verify the app container can reach the database by container name
+
+        docker exec app-container apk add mysql-client
+        docker exec app-container ping mysql-db
+
+        docker exec -it app-container mysql -h mysql-db -u root -p
+        Enter password: root
+
+        show databases;
+        information_schema
+        myapp
+        mysql
+        performance_schema
+        sys
