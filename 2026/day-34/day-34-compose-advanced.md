@@ -7,3 +7,14 @@ Create a docker-compose.yml for a 3-service stack:
 * A cache (Redis)
 
 Write a simple Dockerfile for the web app. The app doesn't need to be complex — even a "Hello World" that connects to the database is enough.
+
+**File Path**
+
+    mkdir multi-service-app
+    cd multi-service-app
+    mkdir app
+    cd app
+    vim .env
+
+**.env file**
+
