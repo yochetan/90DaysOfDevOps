@@ -18,3 +18,9 @@ Write a simple Dockerfile for the web app. The app doesn't need to be complex â€
 
 **.env file**
 
+    MYSQL_ROOT_PASSWORD=rootpassword
+    MYSQL_DATABASE=myapp
+    MYSQL_USER=myuser
+    MYSQL_PASSWORD=mypassword
+
+**
