@@ -39,6 +39,12 @@ Task 2: Write the Dockerfile
       
       npm install express
 
+- updated the index.js
+
+        var express = require('../../');
+        TO
+        var express = require('express');
+
 - then we will build it
       
       docker build -t express-hello:v1 .
@@ -48,6 +54,30 @@ Task 2: Write the Dockerfile
       docker run -d -p 3000:3000 --name express-app express-hello:v1
 
 2) Use a multi-stage build if applicable
+
+`Dockerfile.multistage`
+
+    #Stage 1: build
+    FROM node:22-alpine AS build
+    
+    WORKDIR /app
+    
+    COPY package*.json .
+    
+    RUN npm install
+    
+    COPY . .
+    
+    #Stage 2: Runtime
+    FROM node:22-alpine 
+    
+    WORKDIR /app
+    
+    COPY --from=build /app .
+    
+    EXPOSE 3000
+    
+    CMD ["node", "index.js"]
 
 3) Use a non-root user
 
