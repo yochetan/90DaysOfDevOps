@@ -119,7 +119,7 @@ Task 3: Push to Docker Hub
 
 3) Tag your image properly: yourusername/image-name:tag
         
-        docker image tag stupidgenuis/ai-bankapp:latest
+        docker image tag ai-bankapp:latest stupidgenuis/ai-bankapp:latest
 
 4) Push it to Docker Hub
 
