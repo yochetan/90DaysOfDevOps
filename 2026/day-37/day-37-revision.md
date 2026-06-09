@@ -4,7 +4,11 @@ Mark yourself honestly — can do, shaky, or haven't done:
 
  Run a container from Docker Hub (interactive + detached)
 
-    docker run -i -d 
+    # Interactive container
+    docker run -it ubuntu:latest bash
+
+    # Detached container
+    docker run -d nginx
  
  List, stop, remove containers and images
 
