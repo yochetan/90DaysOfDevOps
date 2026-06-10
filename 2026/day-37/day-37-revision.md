@@ -1,43 +1,68 @@
-Self-Assessment Checklist
-
---
+##Self-Assessment Checklist
 
 Mark yourself honestly — can do, shaky, or haven't done:
 
- Run a container from Docker Hub (interactive + detached)
+* Run a container from Docker Hub (interactive + detached)
 
-    # Interactive container
-    docker run -it ubuntu:latest bash
-
-    # Detached container
-    docker run -d nginx
+      # Interactive container
+      docker run -it ubuntu:latest bash
+  
+      # Detached container
+      docker run -d nginx
  
- List, stop, remove containers and images
+* List, stop, remove containers and images
 
-    list: docker ps / docker ps -a
-    stop: docker stop 'id'
-    remove containers: docker rm 'id'
-    remove images: docker rmi 'id'
+      list: docker ps / docker ps -a
+      stop: docker stop 'id'
+      remove containers: docker rm 'id'
+      remove images: docker rmi 'id'
  
- Explain image layers and how caching works
+* Explain image layers and how caching works
 
+      Images Layers: 
+      A Docker image is made up of multiple read-only layers stacked on top of each other.
+      Each instruction in a Dockerfile (such as RUN, COPY, or ADD) usually creates a new layer.
+
+      Example:
+      
+      FROM ubuntu:22.04
+      RUN apt-get update
+      RUN apt-get install -y nginx
+      COPY index.html /var/www/html/
+      CMD ["nginx", "-g", "daemon off;"]
+      
+      Layers created:
+      
+      Base Ubuntu layer (FROM)
+      Package index update (RUN apt-get update)
+      Nginx installation (RUN apt-get install)
+      Copy website files (COPY)
+      Metadata layer (CMD)
+      When a container starts, Docker adds a writable container layer on top of these read-only image layers.
+
+      Docker Layer Caching:
+      Docker stores previously built layers in its cache.
+      
+      During a rebuild, Docker checks each instruction:
+      
+      - If nothing has changed, Docker reuses the cached layer.
+      - If something changed, Docker rebuilds that layer and all layers after it.
  
- 
- Write a Dockerfile from scratch with FROM, RUN, COPY, WORKDIR, CMD
+* Write a Dockerfile from scratch with FROM, RUN, COPY, WORKDIR, CMD
 
-    FROM node:22-alpine
-
-    WORKDIR /app
-
-    COPY packages*.json .
-
-    RUN npm install
-
-    COPY . .
-
-    CMD ["node","index.js"]
- 
- Explain CMD vs ENTRYPOINT
+      FROM node:22-alpine
+  
+      WORKDIR /app
+  
+      COPY packages*.json .
+  
+      RUN npm install
+  
+      COPY . .
+  
+      CMD ["node","index.js"]
+   
+* Explain CMD vs ENTRYPOINT
 
  *CMD
 
