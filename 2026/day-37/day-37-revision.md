@@ -1,5 +1,7 @@
 Self-Assessment Checklist
 
+---
+
 Mark yourself honestly — can do, shaky, or haven't done:
 
  Run a container from Docker Hub (interactive + detached)
