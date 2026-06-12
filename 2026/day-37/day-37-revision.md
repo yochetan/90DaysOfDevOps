@@ -213,3 +213,121 @@ environment variables in Compose
       
       depends_on:
              mongodb:
+
+---
+
+## Quick-Fire Questions
+
+Answer from memory, then verify:
+
+1) What is the difference between an image and a container?
+
+IMAGE:
+
+            A Docker image is a read-only template containing:
+            
+            - Application code
+            - Dependencies
+            - Libraries
+            - Runtime environment
+            - Configuration
+            
+            Think of it as a blueprint.
+
+Container:
+      
+      A container is a running instance of an image.
+      
+      Think of it as the actual house built from the blueprint.
+
+2) What happens to data inside a container when you remove it?
+
+            Data stored in the container's writable layer is deleted when the container is removed.
+            
+            Exception:
+            
+            If data is stored in:
+            
+            - A named volume
+            - A bind mount
+            
+            it survives container removal.
+
+3) How do two containers on the same custom network communicate?
+
+            Docker provides:
+
+            Virtual networking
+            Built-in DNS
+
+4) What does docker compose down -v do differently from docker compose down?
+
+`docker compose down`
+
+      Stops and removes:
+      - Containers
+      - Networks
+
+`docker compose down -v`
+      
+      Stops and removes:
+      - Containers
+      - Networks
+      - Named volumes
+
+5) Why are multi-stage builds useful?
+
+            Multi-stage builds reduce image size and improve security.
+            
+            Benefits:
+            
+            Smaller Images
+            Without multi-stage:
+                  - Node.js + source + build tools + output
+            With multi-stage:
+                  - Only final build output
+
+            Faster Deployments
+            Smaller images:
+            - Pull faster
+            - Push faster
+            - Start faster
+            
+            Better Security
+            - Build tools and source code are not included in production images.
+
+6) What is the difference between COPY and ADD?
+            
+            COPY:
+            - Simply copies files and directories.
+            
+            ADD: 
+            Can do everything COPY does, plus:
+            - Extract local tar archives automatically
+            - Download files from URLs
+
+7) What does -p 8080:80 mean?
+
+Syntax:
+
+      -p HOST_PORT:CONTAINER_PORT
+
+Example:
+
+      docker run -p 8080:80 nginx
+
+Means:
+
+      Host machine port 8080
+              ↓
+      Container port 80
+
+Visit:
+
+      http://localhost:8080
+
+      and Docker forwards traffic to port 80 inside the container.
+
+8) How do you check how much disk space Docker is using?
+
+            docker system df
