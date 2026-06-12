@@ -1,5 +1,9 @@
-docker ps 
-docker ps -a
+* Container commands — run, ps, stop, rm, exec, logs
+
+      docker ps 
+      docker ps -a
+
+
 docker start 'id'
 docker stop 'id'
 docker rm 'id'
