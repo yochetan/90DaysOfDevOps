@@ -2,7 +2,7 @@ Task 1: Trigger on Pull Request
 
 1) Create .github/workflows/pr-check.yml
 
-
+        done
 
 2) Trigger it only when a pull request is opened or updated against main
 
