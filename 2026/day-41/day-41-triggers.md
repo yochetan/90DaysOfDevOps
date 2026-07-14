@@ -189,8 +189,18 @@ Create .github/workflows/matrix.yml that:
 
 Then extend the matrix to also include 2 operating systems — how many total jobs run now?
 
+        Total jobs:
+        
+        2 operating systems
+        3 Python versions
+        
+        Calculation:
+        
+        2 × 3 = 6 jobs
+
 
 Task 5: Exclude & Fail-Fast
+
 1) In your matrix, exclude one specific combination (e.g., Python 3.10 on Windows)
 
 
