@@ -203,7 +203,78 @@ Task 5: Exclude & Fail-Fast
 
 1) In your matrix, exclude one specific combination (e.g., Python 3.10 on Windows)
 
+        name: Matrix Build
+        
+        on: 
+          workflow_dispatch:
+        
+        jobs:
+          test:
+            runs-on: ubuntu-latest
+        
+            strategy:
+              matrix:
+                os:
+                 - ubuntu-latest
+                python-version: ["3.10", "3.11", "3.12"]
+        
+                exclude:
+                 - os: ubuntu-latest
+                   python-version: "3.11"
+        
+            steps:
+             - name: Checkout respository
+               uses: actions/checkout@v4
+        
+             - name: Set up python
+               uses: actions/setup-python@v5
+               with:
+                 python-version: ${{ matrix.python-version }}
+        
+             - name: Print python version
+               run: python --version
+      
 
 2) Set fail-fast: false — trigger a failure in one job and observe what happens to the rest
 
+        name: Matrix Build
+        
+        on: 
+          workflow_dispatch:
+        
+        jobs:
+          test:
+            runs-on: ubuntu-latest
+        
+            strategy:
+              fail-fast: false
+              matrix:
+                os:
+                 - ubuntu-latest
+                python-version: ["3.10", "3.11", "3.12"]
+        
+                exclude:
+                 - os: ubuntu-latest
+                   python-version: "3.11"
+        
+            steps:
+             - name: Checkout respository
+               uses: actions/checkout@v4
+        
+             - name: Set up python
+               uses: actions/setup-python@v5
+               with:
+                 python-version: ${{ matrix.python-version }}
+        
+             - name: Print python version
+               run: python --version
+
 3) Write in your notes: What does fail-fast: true (the default) do vs false?
+
+* fail-fast: true (default):
+
+        If one matrix job fails, GitHub cancels the remaining in-progress or queued matrix jobs to save time and resources.
+
+* fail-fast: false:
+
+        If one matrix job fails, all other matrix jobs continue running until they finish. This is useful when you want to see results for every OS/version combination in a single run.
