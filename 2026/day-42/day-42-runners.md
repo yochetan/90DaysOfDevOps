@@ -243,12 +243,10 @@ Task 6: GitHub-Hosted vs Self-Hosted
 
 Fill this in your notes:
 
-+---------------------+-------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------+
-| Feature             | GitHub-Hosted Runner                                                                | Self-Hosted Runner                                                                                 |
-+---------------------+-------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------+
-| Who manages it?     | GitHub                                                                              | You (or your organization)                                                                         |
-| Cost                | Included with GitHub minutes (extra usage may incur charges depending on your plan) | You pay for and maintain the machine or VM                                                         |
-| Pre-installed tools | Many common tools (Docker, Git, Python, Node.js, Java, etc.) are already installed  | You install and maintain the tools you need                                                        |
-| Good for            | General CI/CD, open-source projects, quick setup, and standard builds               | Custom software, private networks, special hardware (GPU), large builds, or company infrastructure |
-| Security concern    | Code runs on temporary GitHub-managed VMs that are destroyed after each job         | Your machine is exposed to workflow jobs, so you must secure, update, and monitor it               |
-+---------------------+-------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------+
+| Feature | GitHub-Hosted Runner | Self-Hosted Runner |
+|---|---|---|
+| Who manages it? | GitHub | You (or your organization) |
+| Cost | Included with GitHub minutes (extra usage may incur charges depending on your plan) | You pay for and maintain the machine or VM |
+| Pre-installed tools | Many common tools (Docker, Git, Python, Node.js, Java, etc.) are already installed | You install and maintain the tools you need |
+| Good for | General CI/CD, open-source projects, quick setup, and standard builds | Custom software, private networks, special hardware (GPU), large builds, or company infrastructure |
+| Security concern | Code runs on temporary GitHub-managed VMs that are destroyed after each job | Your machine is exposed to workflow jobs, so you must secure, update, and monitor it |
