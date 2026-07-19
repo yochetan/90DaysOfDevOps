@@ -157,6 +157,10 @@ Task 3: Set Up a Self-Hosted Runner
 
 * A cloud VM (EC2, Utho, or any VPS)
 
+      selected an EC2 runner
+
 4) Start the runner — verify it shows as Idle in GitHub
+
+        yeah, i did and it showed idle.
 
 Verify: Your runner appears in the Runners list with a green dot.
