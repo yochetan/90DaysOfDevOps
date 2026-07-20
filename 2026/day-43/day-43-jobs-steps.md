@@ -140,12 +140,12 @@ Task 3: Job Outputs
 
 * Syntax Summary 
 
-| --- | --- |
 | Purpose | Syntax |
-| Set a step output | echo name=value >> $GITHUB_OUTPUT |
+|---|---|
+| Set a step output	echo "name=value" >> $GITHUB_OUTPUT |  |
 | Give the step an ID | id: date |
 | Create a job output | outputs: today: ${{ steps.date.outputs.today }} |
-| Make another job wait | needs: job1 |
+| Make another job wait | needs: generate-date |
 | Read the job output | ${{ needs.generate-date.outputs.today }} |
 
 - This demonstrates how to pass data between jobs using outputs and needs.<job>.outputs.<name>.
