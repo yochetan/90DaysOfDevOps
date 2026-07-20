@@ -142,7 +142,7 @@ Task 3: Job Outputs
 
 | Purpose | Syntax |
 |---|---|
-| Set a step output	echo "name=value" >> $GITHUB_OUTPUT |  |
+| Set a step output   |	echo "name=value" >> $GITHUB_OUTPUT |  |
 | Give the step an ID | id: date |
 | Create a job output | outputs: today: ${{ steps.date.outputs.today }} |
 | Make another job wait | needs: generate-date |
