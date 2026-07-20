@@ -140,7 +140,6 @@ Task 3: Job Outputs
 
 * Syntax Summary 
 
-| --- | --- |
 |---|---|
 | Purpose | Syntax |
 | Set a step output | echo name=value >> $GITHUB_OUTPUT |
