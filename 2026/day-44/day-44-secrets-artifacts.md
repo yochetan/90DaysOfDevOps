@@ -82,3 +82,29 @@ Task 2: Use Secrets as Environment Variables
 
 3) Add DOCKER_USERNAME and DOCKER_TOKEN as secrets (you'll need these on Day 45)
 
+`Docker-secrets.yml`
+
+        name: Docker Secrets
+        
+        on:
+          workflow_dispatch:
+        
+        jobs:
+          use-secrets:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - name: Pass secrets as environment variables
+                env:
+                  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+                  DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+                run: |
+                  echo "Docker username is available."
+        
+                  if [ -n "$DOCKER_USERNAME" ]; then
+                    echo "DOCKER_USERNAME is set."
+                  fi
+        
+                  if [ -n "$DOCKER_TOKEN" ]; then
+                    echo "DOCKER_TOKEN is set."
+                  fi
