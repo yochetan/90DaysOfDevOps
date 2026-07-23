@@ -323,15 +323,89 @@ Take any script from your earlier days (Python or Shell) and run it in CI:
 
 3) Intentionally break the script — verify the pipeline goes red
 
-
+        #!/bin/bash
+        
+        echo "Starting maintenance..."
+        
+        exit 1
 
 4) Fix it — verify it goes green again
 
+        #!/bin/bash
+        
+        echo "Starting maintenance..."
+        
+        echo "Checking disk usage..."
+        df -h
+        
+        echo "Maintenance completed successfully."
+        
+        exit 0
 
 Task 6: Caching
 
 1) Add actions/cache to a workflow that installs dependencies
 
+`cache-demo.yml`
+
+        name: Cache Demo
+        
+        on: 
+          workflow_dispatch:
+        
+        jobs:
+          cache-demo:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - name: Checkout repository
+                uses: actions/checkout@v4
+        
+              - name: Set up python
+                uses: actions/setup-python@v5
+                with:
+                  python-version: "3.11"
+        
+              - name: Cache pip packages
+                uses: actions/cache@v4
+                with:
+                  path: ~/.cache/pip
+                  key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+                  restore-keys: |
+                    ${{ runner.os }}-pip-
+        
+              - name: Install dependencies
+                run: pip install -r requirements.txt
+        
+              - name: Run script
+                run: python app.py
+
 2) Run it twice — observe the time difference
 
+        yeah a sec and in the logs cache was restored i.e. Cache restored successfully
+        Cache restored from key: Linux-pip-48a4c60a0e26ab9ee85cb50c1c71b3ee0016e0687c7fb4725dd8cf8a30704de3
+
 3) Write in your notes: What is being cached and where is it stored?
+
+        The downloaded dependency packages.
+        
+        For Python:
+        
+                ~/.cache/pip
+        
+        This folder contains packages that pip has already downloaded.
+        
+        Instead of downloading them again, GitHub restores them from the cache.
+
+The cache is stored by GitHub Actions on GitHub's infrastructure—not on the runner.
+
+Here's what happens:
+
+1) First run
+* No cache exists.
+* Dependencies are downloaded.
+* GitHub compresses the cache and stores it.
+
+2) Future runs
+* GitHub checks the cache key.
+* If a matching cache exists, it restores the cached files before installing dependencies.
