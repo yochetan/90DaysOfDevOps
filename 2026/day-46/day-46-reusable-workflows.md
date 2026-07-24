@@ -44,13 +44,14 @@ The calling workflow can then pass inputs:
 
 3) How is calling a reusable workflow different from using a regular action (uses:)?
 
-        | Reusable Workflow | Regular Action |
-        |---|---|
-        | Runs an entire workflow | Runs a single action or task |
-        | Can contain multiple jobs | Usually performs one specific task |
-        | Invoked at the job level | Invoked at the step level |
-        | Can define inputs, secrets, and outputs | Can also define inputs/outputs, but only for that action |
-        | Best for reusing complete CI/CD pipelines | Best for reusable individual operations |
+| Reusable Workflow                         | Regular Action                                           |
+|-------------------------------------------|----------------------------------------------------------|
+| Runs an entire workflow                   | Runs a single action or task                             |
+| Can contain multiple jobs                 | Usually performs one specific task                       |
+| Invoked at the job level                  | Invoked at the step level                                |
+| Can define inputs, secrets, and outputs   | Can also define inputs/outputs, but only for that action |
+| Best for reusing complete CI/CD pipelines | Best for reusable individual operations                  |
+
 
 Reusable workflow:
 
