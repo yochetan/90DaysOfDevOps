@@ -415,12 +415,11 @@ yeah the output was:
 Task 6: Reusable Workflow vs Composite Action
 Fill this in your notes:
 
-| Reusable Workflow | Composite Action |
-|---|---|
-| Triggered by: workflow_call | Triggered by: uses: in a workflow step |
-| Can contain jobs? ✅ Yes, multiple jobs	❌ No, only steps |  |
-| Can contain multiple steps? ✅ Yes | ✅ Yes |
-| Lives where? .github/workflows/ | .github/actions/<action-name>/ (or another action repository) |
-| Can accept secrets directly? ✅ Yes, through the secrets section | ❌ No, secrets must be passed as inputs or environment variables by the calling workflow |  
-| Best for Reusing complete CI/CD pipelines, multiple jobs, and complex workflows | Reusing a sequence of common steps (e.g., setup, build, greeting, installing tools) |
-
+| | Reusable Workflow | Composite Action |
+|---|---|---|
+| Triggered by | `workflow_call` | `uses:` in a step |
+| Can contain jobs? | Yes, multiple jobs | No, only steps |
+| Can contain multiple steps? | Yes | Yes |
+| Lives where? | .github/workflows/ | .github/actions/<action-name>/ (or another action repository) |
+| Can accept secrets directly? | Yes, through the secrets section | No, secrets must be passed as inputs or environment variables by the calling workflow |
+| Best for | Reusing complete CI/CD pipelines, multiple jobs, and complex workflows | Reusing a sequence of common steps (e.g., setup, build, greeting, installing tools) |
