@@ -307,3 +307,390 @@ Verify: Open a PR from a badly named branch — does the check fail?
                     echo "PR description found."
                   fi
 
+Outputs:
+
+mybranch
+
+file-size-check
+
+        All files are under 1 MB.
+
+branch-name-check
+
+        Branch: mybranch
+        Invalid branch name.
+        Branch must start with feature/, fix/, or docs/
+        Error: Process completed with exit code 1.
+
+pr-body-check
+
+        Warning: PR description is empty.
+
+feature/login-page
+
+file-size-check
+
+        All files are under 1 MB.
+
+branch-name-check
+
+        Branch: feature/login-page
+        Branch name is valid.
+
+pr-body-check
+
+        PR description found.
+
+
+Task 3: Scheduled Workflows (Cron Deep Dive)
+
+Create .github/workflows/scheduled-tasks.yml:
+
+1) Add a schedule trigger with cron: '30 2 * * 1' (every Monday at 2:30 AM UTC)
+
+        schedule:
+            - cron: '30 2 * * 1'
+
+2) Add another cron entry: '0 */6 * * *' (every 6 hours)
+
+        - cron: '0 */6 * * *'
+
+3) In the job, print which schedule triggered using ${{ github.event.schedule }}
+
+        - name: Print cron schedule
+                run: |
+                  if [ "${{ github.event_name }}" = "schedule" ]; then
+                    echo "Cron that triggered this run: ${{ github.event.schedule }}"
+                  else
+                    echo "This workflow was triggered manually."
+                  fi
+
+4) Add a step that acts as a health check — curl a URL and check the response code
+
+        - name: Health Check
+                run: |
+                  URL="https://www.google.com"
+        
+                  STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
+        
+                  echo "Response Code: $STATUS_CODE"
+        
+                  if [ "$STATUS_CODE" -eq 200 ]; then
+                    echo "Health check passed."
+                  else
+                    echo "Health check failed."
+                    exit 1
+                  fi
+
+Write in your notes:
+
+* The cron expression for: every weekday at 9 AM IST
+
+        30 3 * * 1-5
+
+* The cron expression for: first day of every month at midnight
+
+        0 0 1 * *
+
+* Why GitHub says scheduled workflows may be delayed or skipped on inactive repos
+
+        GitHub warns that scheduled workflows are best effort rather than guaranteed. They may be delayed or skipped because:
+        
+        - Scheduled events share infrastructure with many repositories, so runs can be delayed during periods of high load.
+        - Public repositories with no recent activity may have scheduled workflows automatically disabled after a period of inactivity (currently 60 days).
+        - If a repository is inactive, GitHub may stop triggering scheduled workflows until there is new activity, such as a push or a manual re-enable.
+
+Important: Also add workflow_dispatch so you can test it manually without waiting for the schedule.
+
+`scheduled-tasks.yml`
+
+        name: Scheduled Tasks
+        
+        on:
+          schedule:
+            # Every Monday at 2:30 AM UTC
+            - cron: '30 2 * * 1'
+        
+            # Every 6 hours
+            - cron: '0 */6 * * *'
+        
+          workflow_dispatch:
+        
+        jobs:
+          scheduled-job:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - name: Print trigger type
+                run: |
+                  echo "Workflow triggered by: ${{ github.event_name }}"
+        
+              - name: Print cron schedule
+                run: |
+                  if [ "${{ github.event_name }}" = "schedule" ]; then
+                    echo "Cron that triggered this run: ${{ github.event.schedule }}"
+                  else
+                    echo "This workflow was triggered manually."
+                  fi
+        
+              - name: Health Check
+                run: |
+                  URL="https://www.google.com"
+        
+                  STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
+        
+                  echo "Response Code: $STATUS_CODE"
+        
+                  if [ "$STATUS_CODE" -eq 200 ]; then
+                    echo "Health check passed."
+                  else
+                    echo "Health check failed."
+                    exit 1
+                  fi
+
+
+Task 4: Path & Branch Filters
+
+Create .github/workflows/smart-triggers.yml:
+
+1) Trigger on push but only when files in src/ or app/ change:
+
+        on:
+          push:
+            paths:
+              - 'src/**'
+              - 'app/**'
+
+2) Add paths-ignore in a second workflow that skips runs when only docs change:
+
+        paths-ignore:
+          - '*.md'
+          - 'docs/**'
+
+3) Add branch filters to only trigger on main and release/* branches
+
+        push:
+            branches:
+              - main
+              - 'release/*'
+
+4) Test it: push a change to a .md file — does the workflow skip?
+
+        yeah it does skips.
+
+Write in your notes: When would you use paths vs paths-ignore?
+
+paths	
+
+        - Run the workflow only when specific files or directories change. This saves CI time by ignoring unrelated changes.
+
+paths-ignore
+
+        - Skip the workflow when changes are limited to certain files (such as documentation or Markdown files), but still run it for code changes.
+
+`smart-triggers.yml`
+
+        name: Smart Triggers
+        
+        on:
+          push:
+            branches:
+              - main
+              - 'release/*'
+            paths:
+              - 'src/**'
+              - 'app/**'
+        
+        jobs:
+          build:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - uses: actions/checkout@v4
+        
+              - name: Print trigger information
+                run: |
+                  echo "Workflow triggered!"
+                  echo "Branch: ${{ github.ref_name }}"
+                  echo "Commit: ${{ github.sha }}"
+
+`ignore-docs.yml`
+
+        name: Ignore Docs Changes
+        
+        on:
+          push:
+            branches:
+              - main
+              - 'release/*'
+            paths-ignore:
+              - '*.md'
+              - 'docs/**'
+        
+        jobs:
+          test:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - uses: actions/checkout@v4
+        
+              - name: Run workflow
+                run: echo "Changes are not documentation-only."
+
+
+Task 5: workflow_run — Chain Workflows Together
+
+Create two workflows:
+
+1) .github/workflows/tests.yml — runs tests on every push
+
+`tests.yml`
+
+        name: Run Tests
+        
+        on:
+          push:
+        
+        jobs:
+          test:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - uses: actions/checkout@v4
+        
+              - name: Simulate Tests
+                run: |
+                  echo "Running tests..."
+                  echo "All tests passed!"
+
+2) .github/workflows/deploy-after-tests.yml — triggers only after tests.yml completes successfully:
+
+        on:
+          workflow_run:
+            workflows: ["Run Tests"]
+            types: [completed]
+
+3) In the deploy workflow, add a conditional:
+
+* Only proceed if the triggering workflow succeeded (${{ github.event.workflow_run.conclusion == 'success' }})
+
+        - name: Deploy
+                if: ${{ github.event.workflow_run.conclusion == 'success' }}
+                run: |
+                  echo "Tests passed."
+                  echo "Deploying application..."
+
+* Print a warning and exit if it failed
+
+        - name: Stop if Tests Failed
+                if: ${{ github.event.workflow_run.conclusion != 'success' }}
+                run: |
+                  echo "Tests failed. Deployment cancelled."
+                  exit 1
+
+`deploy-after-tests.yml`
+
+        name: Deploy After Tests
+        
+        on:
+          workflow_run:
+            workflows: ["Run Tests"]
+            types:
+              - completed
+        
+        jobs:
+          deploy:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - name: Check Test Result
+                run: |
+                  echo "Workflow conclusion: ${{ github.event.workflow_run.conclusion }}"
+        
+              - name: Stop if Tests Failed
+                if: ${{ github.event.workflow_run.conclusion != 'success' }}
+                run: |
+                  echo "Tests failed. Deployment cancelled."
+                  exit 1
+        
+              - name: Deploy
+                if: ${{ github.event.workflow_run.conclusion == 'success' }}
+                run: |
+                  echo "Tests passed."
+                  echo "Deploying application..."
+
+Verify: Push a commit — does the test workflow run first, then trigger the deploy workflow?
+
+        yes the tests workflow runs first, then after the completion the deploy-after-tests workflows runs
+
+
+Task 6: repository_dispatch — External Event Triggers
+
+1) Create .github/workflows/external-trigger.yml with trigger repository_dispatch
+
+        on:
+          repository_dispatch:
+
+2) Set it to respond to event type: deploy-request
+
+        on:
+          repository_dispatch:
+            types:
+              - deploy-request
+
+3) Print the client payload: ${{ github.event.client_payload.environment }}
+
+        - name: Print environment
+                run: echo "Environment = ${{ github.event.client_payload.environment }}"
+
+`external-trigger.yml`
+
+        name: External Trigger
+        
+        on:
+          repository_dispatch:
+            types:
+              - deploy-request
+        
+        jobs:
+          deploy:
+            runs-on: ubuntu-latest
+        
+            steps:
+              - name: Print event type
+                run: echo "Repository dispatch received"
+        
+              - name: Print environment
+                run: echo "Environment = ${{ github.event.client_payload.environment }}"
+        
+              - name: Print full payload
+                run: echo '${{ toJson(github.event.client_payload) }}'
+
+4) Trigger it using curl or gh:
+
+        gh api repos/<owner>/<repo>/dispatches \
+          -f event_type=deploy-request \
+          -f client_payload='{"environment":"production"}'
+
+Write in your notes: When would an external system (like a Slack bot or monitoring tool) trigger a pipeline?
+
+        An external system triggers a pipeline to automate actions based on events.
+
+        Examples:
+
+        - Slack bot: Runs a deployment when someone types /deploy.
+        - Monitoring tool: Starts a recovery workflow when a server fails.
+        - Another CI/CD system: Triggers the next stage after a build completes.
+
+Output:
+        
+        Run echo "Repository dispatch received"
+        Repository dispatch received
+        0s
+        Run echo "Environment = production"
+        Environment = production
+        0s
+        Run echo '{
+        {
+          "environment": "production"
+        }
