@@ -47,6 +47,8 @@ Task 1: Set Up the Project Repo
         RUN npm install
         
         COPY . .
+
+        RUN chmod +x test.sh
         
         EXPOSE 3000
         
