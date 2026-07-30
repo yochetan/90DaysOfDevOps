@@ -889,4 +889,4 @@ Possible future improvements:
 - Integrate Prometheus and Grafana.
 - Add uptime monitoring and alerting.
 
-# In the above I don't know have of the things right now but i'll learn and improve this small project
+# In the above, I don't know half of the things right now. But i'll learn and improve this small project
