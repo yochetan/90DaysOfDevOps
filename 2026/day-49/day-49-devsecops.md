@@ -96,8 +96,62 @@ Test it:
         added lodash package to the package.json
 
 2) Check the Actions tab — did the dependency review run?
-
-
+        
+        yes it ran successfully
 
 Verify: Does the dependency review show up as a check on your PR?
+        
+        YEAH IT DOES
 
+
+Task 4: Add Permissions to Your Workflows
+
+By default, workflows get broad permissions. Lock them down.
+
+Add this block near the top of your workflow files (after on:):
+
+    permissions:
+      contents: read
+
+If a workflow needs to comment on PRs, add:
+    
+    permissions:
+      contents: read
+      pull-requests: write
+
+Update at least 2 of your existing workflow files with a permissions block.
+
+Write in your notes: Why is it a good practice to limit workflow permissions? What could go wrong if a compromised action has 
+write access to your repo?
+
+Why limit workflow permissions?
+
+    Give workflows only the permissions they need. This reduces security risks.
+
+What if a compromised action has write access?
+
+    An attacker could modify code, delete files, change workflows, or push malicious code to your repository.
+
+    Key idea: Use least privilege — only give required permissions.
+
+
+Task 5: See the Full Secure Pipeline
+Look at what your pipeline does now:
+
+    PR opened
+      → build & test
+      → dependency vulnerability check     ← NEW (Day 49)
+      → PR checks pass or fail
+    
+    Merge to main
+      → build & test
+      → Docker build
+      → Trivy image scan (fail on CRITICAL) ← NEW (Day 49)
+      → Docker push (only if scan passes)
+      → deploy
+    
+    Always active
+      → GitHub secret scanning              ← NEW (Day 49)
+      → push protection for secrets         ← NEW (Day 49)
+
+Draw this diagram in your notes. You just built a DevSecOps pipeline — security is now part of your automation, not an afterthought.
