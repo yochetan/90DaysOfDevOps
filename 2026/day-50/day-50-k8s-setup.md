@@ -101,8 +101,49 @@ Install it:
 
 Verify:
 
-kubectl version --client
+* kubectl version --client
 
         Client Version: v1.36.1
         Kustomize Version: v5.8.1
 
+
+Task 4: Set Up Your Local Cluster
+
+Choose one of the following. Both give you a fully functional Kubernetes cluster on your machine.
+
+Option A: kind (Kubernetes in Docker)
+
+        # Install kind
+        # macOS
+        brew install kind
+        
+        # Linux
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+        
+        # Create a cluster
+        kind create cluster --name devops-cluster
+        
+        # Verify
+        kubectl cluster-info
+        kubectl get nodes
+
+Option B: minikube
+
+        # Install minikube
+        # macOS
+        brew install minikube
+        
+        # Linux
+        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        sudo install minikube-linux-amd64 /usr/local/bin/minikube
+        
+        # Start a cluster
+        minikube start
+        
+        # Verify
+        kubectl cluster-info
+        kubectl get nodes
+
+Write down: Which one did you choose and why?
