@@ -245,3 +245,140 @@ Look at the pods running in the kube-system namespace:
 You should see pods like etcd, kube-apiserver, kube-scheduler, kube-controller-manager, coredns, and kube-proxy. These are the architecture components you drew in Task 2 — running as pods inside the cluster.
 
 Verify: Can you match each running pod in kube-system to a component in your architecture diagram?
+
+
+Task 6: Practice Cluster Lifecycle
+
+Build muscle memory with cluster operations:
+
+# Delete your cluster
+kind delete cluster --name devops-cluster
+
+        Deleting cluster "devops-cluster" ...
+        Deleted nodes: ["devops-cluster-control-plane"]
+
+# Recreate it
+kind create cluster --name devops-cluster
+
+        Creating cluster "devops-cluster" ...
+         • Ensuring node image (kindest/node:v1.36.1) 🖼  ...
+         ✓ Ensuring node image (kindest/node:v1.36.1) 🖼
+         • Preparing nodes 📦   ...
+         ✓ Preparing nodes 📦 
+         • Writing configuration 📜  ...
+         ✓ Writing configuration 📜
+         • Starting control-plane 🕹️  ...
+         ✓ Starting control-plane 🕹️
+         • Installing CNI 🔌  ...
+         ✓ Installing CNI 🔌
+         • Installing StorageClass 💾  ...
+         ✓ Installing StorageClass 💾
+        Set kubectl context to "kind-devops-cluster"
+        You can now use your cluster with:
+        
+        kubectl cluster-info --context kind-devops-cluster
+
+# Verify it is back
+kubectl get nodes
+        
+        NAME                           STATUS     ROLES           AGE   VERSION
+        devops-cluster-control-plane   NotReady   control-plane   14s   v1.36.1
+
+Try these useful commands:
+
+# Check which cluster kubectl is connected to
+kubectl config current-context
+
+        kind-devops-cluster
+
+# List all available contexts (clusters)
+kubectl config get-contexts
+
+        CURRENT   NAME                  CLUSTER               AUTHINFO              NAMESPACE
+                  kind-chetan-cluster   kind-chetan-cluster   kind-chetan-cluster   
+        *         kind-devops-cluster   kind-devops-cluster   kind-devops-cluster           
+
+# See the full kubeconfig
+kubectl config view
+
+        apiVersion: v1
+        clusters:
+        - cluster:
+            certificate-authority-data: DATA+OMITTED
+            server: https://127.0.0.1:56313
+          name: kind-chetan-cluster
+        - cluster:
+            certificate-authority-data: DATA+OMITTED
+            server: https://127.0.0.1:63668
+          name: kind-devops-cluster
+        contexts:
+        - context:
+            cluster: kind-chetan-cluster
+            user: kind-chetan-cluster
+          name: kind-chetan-cluster
+        - context:
+            cluster: kind-devops-cluster
+            user: kind-devops-cluster
+          name: kind-devops-cluster
+        current-context: kind-devops-cluster
+        kind: Config
+        users:
+        - name: kind-chetan-cluster
+          user:
+            client-certificate-data: DATA+OMITTED
+            client-key-data: DATA+OMITTED
+        - name: kind-devops-cluster
+          user:
+            client-certificate-data: DATA+OMITTED
+            client-key-data: DATA+OMITTED
+
+Write down: What is a kubeconfig? Where is it stored on your machine?
+
+        kubeconfig is a configuration file that tells kubectl how and where to connect to a Kubernetes cluster.
+
+It contains things like:
+
+        Cluster information — API server address
+        User credentials — certificates/tokens used for authentication
+        Contexts — which cluster and user kubectl should use
+
+Where is it stored?
+
+On Windows PowerShell:
+
+        C:\Users\<YourUsername>\.kube\config
+
+You can check it with:
+
+- kubectl config view
+        
+        apiVersion: v1
+        clusters:
+        - cluster:
+            certificate-authority-data: DATA+OMITTED
+            server: https://127.0.0.1:56313
+          name: kind-chetan-cluster
+        - cluster:
+            certificate-authority-data: DATA+OMITTED
+            server: https://127.0.0.1:58935
+          name: kind-devops-cluster
+        contexts:
+        - context:
+            cluster: kind-chetan-cluster
+            user: kind-chetan-cluster
+          name: kind-chetan-cluster
+        - context:
+            cluster: kind-devops-cluster
+            user: kind-devops-cluster
+          name: kind-devops-cluster
+        current-context: kind-devops-cluster
+        kind: Config
+        users:
+        - name: kind-chetan-cluster
+          user:
+            client-certificate-data: DATA+OMITTED
+            client-key-data: DATA+OMITTED
+        - name: kind-devops-cluster
+          user:
+            client-certificate-data: DATA+OMITTED
+            client-key-data: DATA+OMITTED
