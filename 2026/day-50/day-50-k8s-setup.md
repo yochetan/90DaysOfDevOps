@@ -147,3 +147,101 @@ Option B: minikube
         kubectl get nodes
 
 Write down: Which one did you choose and why?
+
+Option A: kind (Kubernetes in Docker)
+
+* kubectl cluster-info
+        
+        Kubernetes control plane is running at https://127.0.0.1:56313
+        CoreDNS is running at https://127.0.0.1:56313/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+* kubectl get nodes
+
+        NAME                           STATUS   ROLES           AGE   VERSION
+        chetan-cluster-control-plane   Ready    control-plane   28h   v1.37.0-rc.1
+        chetan-cluster-worker          Ready    <none>          28h   v1.37.0-rc.1
+        chetan-cluster-worker2         Ready    <none>          28h   v1.37.0-rc.1
+
+
+Task 5: Explore Your Cluster
+
+Now that your cluster is running, explore it:
+
+# See cluster info
+kubectl cluster-info
+
+        Kubernetes control plane is running at https://127.0.0.1:56313
+        CoreDNS is running at https://127.0.0.1:56313/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+# List all nodes
+kubectl get nodes
+        
+        NAME                           STATUS   ROLES           AGE   VERSION
+        chetan-cluster-control-plane   Ready    control-plane   28h   v1.37.0-rc.1
+        chetan-cluster-worker          Ready    <none>          28h   v1.37.0-rc.1
+        chetan-cluster-worker2         Ready    <none>          28h   v1.37.0-rc.1
+
+# Get detailed info about your node
+kubectl describe node <node-name>
+
+        kubectl describe node chetan-cluster-control-plane
+
+# List all namespaces
+kubectl get namespaces
+
+        NAME                 STATUS   AGE
+        default              Active   28h
+        flask-app            Active   27h
+        kube-node-lease      Active   28h
+        kube-public          Active   28h
+        kube-system          Active   28h
+        local-path-storage   Active   28h
+
+# See ALL pods running in the cluster (across all namespaces)
+kubectl get pods -A
+
+        NAMESPACE            NAME                                                   READY   STATUS    RESTARTS        AGE
+        default              nginx-pod                                              1/1     Running   2 (5m22s ago)   27h
+        flask-app            flask-app                                              1/1     Running   2 (5m22s ago)   27h
+        flask-app            flask-app-deployment-86c7456845-2l2m7                  1/1     Running   2 (5m22s ago)   26h
+        flask-app            flask-app-deployment-86c7456845-2x7tr                  1/1     Running   2 (5m22s ago)   26h
+        flask-app            flask-app-deployment-86c7456845-86dvh                  1/1     Running   2 (5m22s ago)   26h
+        flask-app            flask-app-deployment-86c7456845-9tkl8                  1/1     Running   2 (5m22s ago)   26h
+        flask-app            flask-app-deployment-86c7456845-kq9x9                  1/1     Running   2 (5m22s ago)   26h
+        flask-app            flask-app-deployment-86c7456845-ljvsv                  1/1     Running   2 (5m22s ago)   26h
+        flask-app            flask-app-deployment-86c7456845-v2mhc                  1/1     Running   2 (5m22s ago)   26h
+        kube-system          coredns-559f6c778d-ftrmq                               1/1     Running   2 (5m22s ago)   28h
+        kube-system          coredns-559f6c778d-pz5xr                               1/1     Running   2 (5m22s ago)   28h
+        kube-system          etcd-chetan-cluster-control-plane                      1/1     Running   0               5m15s
+        kube-system          kindnet-lg7qp                                          1/1     Running   2 (5m22s ago)   28h
+        kube-system          kindnet-m5sn5                                          1/1     Running   2 (5m22s ago)   28h
+        kube-system          kindnet-pq675                                          1/1     Running   2 (5m22s ago)   28h
+        kube-system          kube-apiserver-chetan-cluster-control-plane            1/1     Running   0               5m15s
+        kube-system          kube-controller-manager-chetan-cluster-control-plane   1/1     Running   3 (18m ago)     28h
+        kube-system          kube-proxy-dflds                                       1/1     Running   2 (5m22s ago)   28h
+        kube-system          kube-proxy-r2vpd                                       1/1     Running   2 (5m22s ago)   28h
+        kube-system          kube-proxy-rxrff                                       1/1     Running   2 (5m22s ago)   28h
+        kube-system          kube-scheduler-chetan-cluster-control-plane            1/1     Running   3 (18m ago)     28h
+        local-path-storage   local-path-provisioner-75f7fc7dc5-w84hk                1/1     Running   4 (4m49s ago)   28h
+
+Look at the pods running in the kube-system namespace:
+
+- kubectl get pods -n kube-system
+        
+        NAME                                                   READY   STATUS    RESTARTS        AGE
+        coredns-559f6c778d-ftrmq                               1/1     Running   2 (6m14s ago)   28h
+        coredns-559f6c778d-pz5xr                               1/1     Running   2 (6m14s ago)   28h
+        etcd-chetan-cluster-control-plane                      1/1     Running   0               6m7s
+        kindnet-lg7qp                                          1/1     Running   2 (6m14s ago)   28h
+        kindnet-m5sn5                                          1/1     Running   2 (6m14s ago)   28h
+        kindnet-pq675                                          1/1     Running   2 (6m14s ago)   28h
+        kube-apiserver-chetan-cluster-control-plane            1/1     Running   0               6m7s
+        kube-controller-manager-chetan-cluster-control-plane   1/1     Running   3 (19m ago)     28h
+        kube-proxy-dflds                                       1/1     Running   2 (6m14s ago)   28h
+        kube-proxy-r2vpd                                       1/1     Running   2 (6m14s ago)   28h
+        kube-proxy-rxrff                                       1/1     Running   2 (6m14s ago)   28h
+        kube-scheduler-chetan-cluster-control-plane            1/1     Running   3 (19m ago)     28h
+
+You should see pods like etcd, kube-apiserver, kube-scheduler, kube-controller-manager, coredns, and kube-proxy. These are the architecture components you drew in Task 2 — running as pods inside the cluster.
+
+Verify: Can you match each running pod in kube-system to a component in your architecture diagram?
