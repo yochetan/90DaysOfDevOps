@@ -481,20 +481,71 @@ kubectl label pod nginx-pod environment-
         
 Write a manifest for a third pod with at least 3 labels (app, environment, team). Apply it and practice filtering.
 
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: nginx-pod-3
+          labels:
+            app: nginx
+            environment: development
+            team: devops
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:latest
+
+Apply:
+
+- kubectl apply -f pod3.yml
+
+        pod/nginx-pod-3 created
+
+Filtering:
+
+- kubectl get pods -l app=nginx
+
+        NAME          READY   STATUS    RESTARTS   AGE
+        nginx-pod-3   1/1     Running   0          37s
+
+- kubectl get pods -l environment=development
+
+        NAME          READY   STATUS    RESTARTS   AGE
+        nginx-pod-3   1/1     Running   0          55s
+
+- kubectl get pods -l team=devops
+        
+        NAME          READY   STATUS    RESTARTS   AGE
+        nginx-pod-3   1/1     Running   0          69s
+
 
 Task 6: Clean Up
 
 Delete all the pods you created:
 
 # Delete by name
-kubectl delete pod nginx-pod
-kubectl delete pod busybox-pod
-kubectl delete pod redis-pod
+
+- kubectl delete pod nginx-pod
+
+        pod "nginx-pod" deleted from default namespace
+
+- kubectl delete pod busybox-pod
+
+        pod "busybox-pod" deleted from default namespace
+
+- kubectl delete pod redis-pod
+
+        pod "redis-pod" deleted from default namespace
 
 # Or delete using the manifest file
-kubectl delete -f nginx-pod.yaml
+
+- kubectl delete -f nginx-pod.yaml
+
+        pod "nginx-pod" deleted from default namespace
 
 # Verify everything is gone
-kubectl get pods
+
+- kubectl get pods
+
+        No resources found in default namespace.
 
 Notice that when you delete a standalone Pod, it is gone forever. There is no controller to recreate it. This is why in production you use Deployments (coming on Day 52) instead of bare Pods.
