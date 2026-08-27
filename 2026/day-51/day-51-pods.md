@@ -415,10 +415,49 @@ Task 4: Validate Before Applying
 Before applying a manifest, you can validate it:
 
 # Check if the YAML is valid without actually creating the resource
-kubectl apply -f nginx-pod.yaml --dry-run=client
+kubectl apply -f nginx-pod.yml --dry-run=client
+
+        nginx-pod/nginx-pod unchanged (dry run)
 
 # Validate against the cluster's API (server-side validation)
-kubectl apply -f nginx-pod.yaml --dry-run=server
+kubectl apply -f nginx-pod.yml --dry-run=server
+
+        pod/nginx-pod unchanged (server dry run)
+
 Now intentionally break your YAML (remove the image field or add an invalid field) and run dry-run again. See what error you get.
 
+kubectl apply --dry-run=client -f pod.yml
+        
+        pod/nginx-pod configured (dry run)
+
+kubectl apply --dry-run=server -f pod.yml 
+
+        The Pod "nginx-pod" is invalid: spec.containers[0].image: Required value
+
 Verify: What error does Kubernetes give when the image field is missing?
+
+        The Pod "nginx-pod" is invalid: spec.containers[0].image: Required value
+
+
+Task 5: Pod Labels and Filtering
+
+Labels are how Kubernetes organizes and selects resources. You added labels in your manifests — now use them:
+
+# List all pods with their labels
+kubectl get pods --show-labels
+
+
+
+# Filter pods by label
+kubectl get pods -l app=nginx
+kubectl get pods -l environment=dev
+
+# Add a label to an existing pod
+kubectl label pod nginx-pod environment=production
+
+# Verify
+kubectl get pods --show-labels
+
+# Remove a label
+kubectl label pod nginx-pod environment-
+Write a manifest for a third pod with at least 3 labels (app, environment, team). Apply it and practice filtering.
