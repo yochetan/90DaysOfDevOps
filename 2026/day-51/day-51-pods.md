@@ -446,18 +446,55 @@ Labels are how Kubernetes organizes and selects resources. You added labels in y
 # List all pods with their labels
 kubectl get pods --show-labels
 
-
+        NAME          READY   STATUS    RESTARTS      AGE   LABELS
+        busybox-pod   1/1     Running   8 (54m ago)   12h   app=busybox,environment=dev
+        nginx-pod     1/1     Running   1 (54m ago)   12h   <none>
+        redis-pod     1/1     Running   1 (54m ago)   11h   run=redis-pod
 
 # Filter pods by label
 kubectl get pods -l app=nginx
+
+        No resources found in default namespace.
+
 kubectl get pods -l environment=dev
+
+        NAME          READY   STATUS    RESTARTS      AGE
+        busybox-pod   1/1     Running   9 (19m ago)   12h
 
 # Add a label to an existing pod
 kubectl label pod nginx-pod environment=production
 
+        pod/nginx-pod labeled
+
 # Verify
 kubectl get pods --show-labels
 
+        NAME          READY   STATUS    RESTARTS      AGE   LABELS
+        busybox-pod   1/1     Running   9 (20m ago)   12h   app=busybox,environment=dev
+        nginx-pod     1/1     Running   1 (80m ago)   12h   environment=production
+        redis-pod     1/1     Running   1 (80m ago)   12h   run=redis-pod
+
 # Remove a label
 kubectl label pod nginx-pod environment-
+
+        pod/nginx-pod unlabeled
+        
 Write a manifest for a third pod with at least 3 labels (app, environment, team). Apply it and practice filtering.
+
+
+Task 6: Clean Up
+
+Delete all the pods you created:
+
+# Delete by name
+kubectl delete pod nginx-pod
+kubectl delete pod busybox-pod
+kubectl delete pod redis-pod
+
+# Or delete using the manifest file
+kubectl delete -f nginx-pod.yaml
+
+# Verify everything is gone
+kubectl get pods
+
+Notice that when you delete a standalone Pod, it is gone forever. There is no controller to recreate it. This is why in production you use Deployments (coming on Day 52) instead of bare Pods.
