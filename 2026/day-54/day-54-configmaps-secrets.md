@@ -156,3 +156,18 @@ Task 2: Create a ConfigMap from a File
 Verify: Does `kubectl get configmap nginx-config -o yaml` show the file contents?
 
         yes it does
+
+---
+
+Task 3: Use ConfigMaps in a Pod
+
+1) Write a Pod manifest that uses envFrom with configMapRef to inject all keys from app-config as environment variables. Use a busybox container that prints the values.
+
+2) Write a second Pod manifest that mounts nginx-config as a volume at /etc/nginx/conf.d. Use the nginx image.
+
+3) Test that the mounted config works: kubectl exec <pod> -- curl -s http://localhost/health
+
+Use environment variables for simple key-value settings. Use volume mounts for full config files.
+
+Verify: Does the /health endpoint respond?
+
