@@ -2,7 +2,7 @@ Task 1: Understand the Problem
 
 1) Create a Deployment with 3 replicas using nginx
 
-    
+`nginx-deployment.yml`
     
         apiVersion: apps/v1
         kind: Deployment
@@ -26,7 +26,6 @@ Task 1: Understand the Problem
                 ports:
                 - containerPort: 80
         
-
 2) Check the pod names — they are random (app-xyz-abc)
         
         nginx-deployment-54fd4d6d4c-9zg96   0/1     ContainerCreating   0          14s
@@ -35,7 +34,7 @@ Task 1: Understand the Problem
 
 3) Delete a pod and notice the replacement gets a different random name
 
-d
+
 
 This is fine for web servers but not for databases where you need stable identity.
 
