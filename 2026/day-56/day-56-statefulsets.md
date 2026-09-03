@@ -28,6 +28,10 @@ Task 1: Understand the Problem
     
 
 2) Check the pod names — they are random (app-xyz-abc)
+        
+        nginx-deployment-54fd4d6d4c-9zg96   0/1     ContainerCreating   0          14s
+        nginx-deployment-54fd4d6d4c-kzfh4   0/1     ContainerCreating   0          14s
+        nginx-deployment-54fd4d6d4c-s5czf   0/1     ContainerCreating   0          14s
 
 3) Delete a pod and notice the replacement gets a different random name
 
