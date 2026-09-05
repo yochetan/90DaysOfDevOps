@@ -429,3 +429,88 @@ Verify: When readiness failed, was the container restarted?
 
 # a failed readiness probe tells Kubernetes "don't send traffic to me", 
 # while a failed liveness probe tells Kubernetes "restart me."
+
+---
+
+Task 6: Startup Probe
+
+A startup probe gives slow-starting containers extra time. While it runs, liveness and readiness probes are disabled.
+
+1) Write a Pod manifest where the container takes 20 seconds to start (e.g., `sleep 20 && touch /tmp/started`)
+
+`startup-probe.yml`
+
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: startup-probe
+        spec:
+          containers:
+            - name: app
+              image: busybox:1.36
+              command:
+                - sh
+                - -c
+                - |
+                  echo "Container starting..."
+                  sleep 20
+                  touch /tmp/started
+                  echo "Container started!"
+                  while true; do sleep 10; done
+        
+              startupProbe:
+                exec:
+                  command:
+                    - test
+                    - -f
+                    - /tmp/started
+                periodSeconds: 5
+                failureThreshold: 12
+        
+              livenessProbe:
+                exec:
+                  command:
+                    - test
+                    - -f
+                    - /tmp/started
+                periodSeconds: 5
+                failureThreshold: 3
+
+2) Add a `startupProbe` checking for `/tmp/started` with `periodSeconds: 5` and `failureThreshold: 12` (60 second budget)
+
+              startupProbe:
+                exec:
+                  command:
+                    - test
+                    - -f
+                    - /tmp/started
+                periodSeconds: 5
+                failureThreshold: 12
+
+3) Add a `livenessProbe` that checks the same file — it only kicks in after startup succeeds
+
+              livenessProbe:
+                exec:
+                  command:
+                    - test
+                    - -f
+                    - /tmp/started
+                periodSeconds: 5
+                failureThreshold: 3
+
+Verify: What would happen if `failureThreshold` were 2 instead of 12?
+
+`failureThreshold × periodSeconds` gives the approximate startup budget:
+
+- `12 × 5 = 60 seconds` ✅ enough for the 20-second startup
+- `2 × 5 = 10 seconds` ❌ not enough for the 20-second startup
+
+So `failureThreshold: 12` gives the slow container up to about 60 seconds to become ready for the first time.
+
+---
+
+Task 7: Clean Up
+
+Delete all pods and services you created.
+
+        yup deleted all.
