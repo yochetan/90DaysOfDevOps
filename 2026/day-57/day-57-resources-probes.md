@@ -427,4 +427,5 @@ Verify: When readiness failed, was the container restarted?
 
         No it wasn't
 
-* a failed readiness probe tells Kubernetes "don't send traffic to me", while a failed liveness probe tells Kubernetes "restart me." *
+# a failed readiness probe tells Kubernetes "don't send traffic to me", 
+# while a failed liveness probe tells Kubernetes "restart me."
