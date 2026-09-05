@@ -353,3 +353,78 @@ A liveness probe detects stuck containers. If it fails, Kubernetes restarts the 
 Verify: How many times has the container restarted?
 
         1
+
+---
+
+Task 5: Readiness Probe
+
+A readiness probe controls traffic. Failure removes the Pod from Service endpoints but does NOT restart it.
+
+1) Write a Pod manifest with nginx and a `readinessProbe` using `httpGet` on path `/` port `80`
+
+`readiness-pod.yml`
+
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: readiness-pod
+          labels:
+            app: readiness
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:latest
+              ports:
+                - containerPort: 80
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 80
+                initialDelaySeconds: 5
+                periodSeconds: 5
+
+- kubectl apply -f .\readiness-pod.yml
+
+        pod/readiness-pod created
+
+2) Expose it as a Service: `kubectl expose pod <name> --port=80 --name=readiness-svc`
+
+- kubectl expose pod readiness-pod --port=80 --name=readiness-svc
+
+        service/readiness-svc exposed
+
+- kubectl get svc readiness-svc
+
+        NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+        readiness-svc   ClusterIP   10.96.200.120   <none>        80/TCP    16s
+
+3) Check `kubectl get endpoints readiness-svc` — the Pod IP is listed
+
+- kubectl get endpoints readiness-svc
+
+        Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+        NAME            ENDPOINTS       AGE
+        readiness-svc   10.244.2.2:80   33s
+
+4) Break the probe: `kubectl exec <pod> -- rm /usr/share/nginx/html/index.html`
+
+- kubectl exec readiness-pod -- rm /usr/share/nginx/html/index.html
+
+5) Wait 15 seconds — Pod shows `0/1` READY, endpoints are empty, but the container is NOT restarted
+
+- kubectl get pod readiness-pod
+
+        NAME            READY   STATUS    RESTARTS   AGE
+        readiness-pod   0/1     Running   0          2m16s
+
+- kubectl get endpoints readiness-svc
+
+        Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+        NAME            ENDPOINTS   AGE
+        readiness-svc               107s
+
+Verify: When readiness failed, was the container restarted?
+
+        No it wasn't
+
+* a failed readiness probe tells Kubernetes "don't send traffic to me", while a failed liveness probe tells Kubernetes "restart me." *
