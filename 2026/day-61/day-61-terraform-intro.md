@@ -65,9 +65,14 @@ Task 2: Install Terraform and Configure AWS
         # Windows
         choco install terraform
 
+* I did using linux as I am doing it in an AWS EC2 instance
+
 2) Verify:
 
-        terraform -version
+        - terraform -version
+        
+        Terraform v1.16.2
+        on linux_amd64
 
 3) Install and configure the AWS CLI:
 
@@ -76,6 +81,14 @@ Task 2: Install Terraform and Configure AWS
 
 4) Verify AWS access:
 
-        aws sts get-caller-identity
+        - aws sts get-caller-identity
+        
+        {
+            "UserId": "AIDAY4Z4RYDCWKQYRC42V",
+            "Account": "611622961349",
+            "Arn": "arn:aws:iam::611622961349:user/chota-chetan"
+        }
 
 You should see your AWS account ID and ARN.
+
+
