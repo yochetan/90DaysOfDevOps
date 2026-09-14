@@ -37,6 +37,45 @@ Before touching the terminal, research and write short notes on:
 
 4) What does it mean that Terraform is "declarative" and "cloud-agnostic"?
 
+- Declarative
 
+        Terraform is declarative, meaning I describe what I want the final infrastructure to look like, rather than writing every step required to create it.
+
+- Cloud-agnostic
+
+        Cloud-agnostic means Terraform isn't limited to a single cloud provider.
 
 Write this in your own words -- not copy-pasted definitions.
+
+---
+
+Task 2: Install Terraform and Configure AWS
+
+1) Install Terraform:
+
+        # macOS
+        brew tap hashicorp/tap
+        brew install hashicorp/tap/terraform
+        
+        # Linux (amd64)
+        wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+        sudo apt update && sudo apt install terraform
+        
+        # Windows
+        choco install terraform
+
+2) Verify:
+
+        terraform -version
+
+3) Install and configure the AWS CLI:
+
+        aws configure
+        # Enter your Access Key ID, Secret Access Key, default region (e.g., ap-south-1), output format (json)
+
+4) Verify AWS access:
+
+        aws sts get-caller-identity
+
+You should see your AWS account ID and ARN.
