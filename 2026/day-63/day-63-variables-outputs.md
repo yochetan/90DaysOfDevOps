@@ -470,23 +470,358 @@ Practice these in `terraform console`:
 1) String functions:
 
 - `upper("terraweek")` -> `"TERRAWEEK"`
+
+        upper("terraweek")
+        "TERRAWEEK"
+
 - `join("-", ["terra", "week", "2026"])` -> `"terra-week-2026"`
+
+        join("-", ["terra", "week", "2026"])
+        "terra-week-2026"
+
 - `format("arn:aws:s3:::%s", "my-bucket")`
+
+        format("arn:aws:s3:::%s", "my-bucket")
+        "arn:aws:s3:::my-bucket"
 
 2) Collection functions:
 
 - `length(["a", "b", "c"])` -> `3`
+
+        length(["a", "b", "c"])
+        3
+
 - `lookup({dev = "t2.micro", prod = "t3.small"}, "dev")` -> `"t2.micro"`
+
+        lookup({dev = "t2.micro", prod = "t3.small"}, "dev")
+        "t2.micro"
+
 - `toset(["a", "b", "a"])` -> removes duplicates
+
+        toset([
+          "a",
+          "b",
+        ])
 
 3) Networking function:
 
 - `cidrsubnet("10.0.0.0/16", 8, 1)` -> `"10.0.1.0/24"`
+        
+        cidrsubnet("10.0.0.0/16", 8, 1)
+        "10.0.1.0/24"
 
 4) Conditional expression -- add this to your config:
 
-        instance_type = var.environment == "prod" ? "t3.small" : "t2.micro"
+- instance_type = var.environment == "prod" ? "t3.small" : "t2.micro"
+        
+        resource "aws_instance" "main" {
+          ami                         = data.aws_ami.amazon_linux.id
+          instance_type = var.environment == "prod" ? "t3.small" : "t2.micro"
+          subnet_id                   = aws_subnet.main.id
+          vpc_security_group_ids      = [aws_security_group.main.id]
+          associate_public_ip_address = true
+        
+          lifecycle {
+            create_before_destroy = true
+          }
+        
+          tags = merge(
+            local.common_tags,
+            var.extra_tags,
+            {
+              Name = "${local.name_prefix}-server"
+            }
+          )
+        }
+
 
 Apply with `environment = "prod"` and verify the instance type changes.
 
 Document: Pick five functions you find most useful and explain what each does.
+
+1. length()
+
+        Returns the number of elements in a collection or characters in a string.
+
+2. lookup()
+
+        Retrieves a value from a map using a key.
+
+3. merge()
+
+        Combines multiple maps into one map.
+
+4. cidrsubnet()
+
+        Calculates a subnet CIDR from a larger network CIDR.
+
+5. upper()
+
+        Converts a string to uppercase.
+
+---
+
+`variables.tf`
+```hcl
+variable "region" {
+  description = "This variable holds region"
+  default     = "us-west-2"
+  type        = string
+}
+
+variable "vpc_cidr" {
+  description = "This variable holds vpc cidr"
+  default     = "10.0.0.0/16"
+  type        = string
+}
+
+variable "subnet_cidr" {
+  description = "This variable holds subnet cidr"
+  default     = "10.0.1.0/24"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "This variable holds ec2 instance type"
+  default     = "t2.micro"
+  type        = string
+}
+
+variable "project_name" {
+  description = "This variable holds project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "This variable holds environment"
+  default     = "dev"
+  type        = string
+}
+
+variable "allowed_ports" {
+  description = "This variable holds allowed ports"
+  default     = [22, 80, 443]
+  type        = list(number)
+}
+
+variable "extra_tags" {
+  description = "This variable holds vpc cidr"
+  default     = {}
+  type        = map(string)
+}
+```
+
+`terraform.tfvars`
+```hcl
+project_name  = "terraweek"
+environment   = "dev"
+instance_type = "t2.micro"
+```
+
+`prod.tfvars`
+```hcl
+project_name  = "terraweek"
+environment   = "prod"
+instance_type = "t3.small"
+vpc_cidr      = "10.1.0.0/16"
+subnet_cidr   = "10.1.1.0/24"
+```
+
+`outputs.tf`
+```hcl
+output "vpc_id" {
+  value = aws_vpc.main.id
+}
+
+output "subnet_id" {
+  value = aws_subnet.main.id
+}
+
+output "instance_id" {
+  value = aws_instance.main.id
+}
+
+output "instance_public_ip" {
+  value = aws_instance.main.public_ip
+}
+
+output "instance_public_dns" {
+  value = aws_instance.main.public_dns
+}
+
+output "security_group_id" {
+  value = aws_security_group.main.id
+}
+```
+
+`locals.tf`
+```hcl
+locals {
+  name_prefix = "${var.project_name}-${var.environment}"
+
+  common_tags = {
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+  }
+}
+```
+
+`main.tf`
+
+```hcl
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+}
+
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr
+
+  tags = merge(
+    local.common_tags,
+    var.extra_tags,
+    {
+      Name = "${local.name_prefix}-vpc"
+    }
+  )
+}
+
+resource "aws_subnet" "main" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.subnet_cidr
+  availability_zone       = data.aws_availability_zones.available.names[0]
+  map_public_ip_on_launch = true
+
+  tags = merge(
+    local.common_tags,
+    var.extra_tags,
+    {
+      Name = "${local.name_prefix}-subnet"
+    }
+  )
+}
+
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    var.extra_tags,
+    {
+      Name = "${local.name_prefix}-igw"
+    }
+  )
+}
+
+resource "aws_route_table" "example" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gw.id
+  }
+
+  tags = merge(
+    local.common_tags,
+    var.extra_tags,
+    {
+      Name = "${local.name_prefix}-route-table"
+    }
+  )
+}
+
+resource "aws_route_table_association" "example" {
+  subnet_id      = aws_subnet.main.id
+  route_table_id = aws_route_table.example.id
+}
+
+resource "aws_security_group" "main" {
+  name        = "${local.name_prefix}-sg"
+  description = "Allow SSH and HTTP traffic"
+  vpc_id      = aws_vpc.main.id
+
+  dynamic "ingress" {
+    for_each = var.allowed_ports
+    content {
+      description = "Allow port ${ingress.value}"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+    local.common_tags,
+    var.extra_tags,
+    {
+      Name = "${local.name_prefix}-sg"
+    }
+  )
+}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+resource "aws_instance" "main" {
+  ami                         = data.aws_ami.amazon_linux.id
+  instance_type = var.environment == "prod" ? "t3.small" : "t2.micro"
+  subnet_id                   = aws_subnet.main.id
+  vpc_security_group_ids      = [aws_security_group.main.id]
+  associate_public_ip_address = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = merge(
+    local.common_tags,
+    var.extra_tags,
+    {
+      Name = "${local.name_prefix}-server"
+    }
+  )
+}
+
+resource "aws_s3_bucket" "app_logs" {
+  bucket     = "${var.project_name}-app-logs-2026"
+  depends_on = [aws_instance.main]
+
+  tags = merge(
+    local.common_tags,
+    var.extra_tags,
+    {
+      Name = "${local.name_prefix}-app-logs"
+    }
+  )
+}
+```
