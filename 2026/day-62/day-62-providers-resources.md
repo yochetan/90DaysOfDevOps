@@ -812,6 +812,22 @@ Document: What are the three lifecycle arguments (`create_before_destroy`, `prev
 | ignore_changes        | Ignores changes to specified attributes            | Allow external/manual changes |
 
 
+`providers.tf`
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-west-2"
+}
+```
+
 `main.tf`
 ```hcl
         data "aws_ami" "amazon_linux_2" {
