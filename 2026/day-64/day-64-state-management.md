@@ -1,6 +1,6 @@
 Task 1: Inspect Your Current State
 
-1) Use your Day 63 config (or create a small config with a VPC and EC2 instance). Apply it and then explore the state:
+Use your Day 63 config (or create a small config with a VPC and EC2 instance). Apply it and then explore the state:
 
         terraform show                                    # Full state in human-readable format
         terraform state list                              # All resources tracked by Terraform
