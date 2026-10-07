@@ -386,3 +386,138 @@ Document: What is the difference between `terraform import` and creating a resou
 | Does not create the resource	|terraform apply creates it                                                           |                         
 | Adds the resource to Terraform state	|Terraform creates it and records it in state                                 |                         
 | Configuration must be written to match the existing resource	|Configuration describes what Terraform should create |                           
+
+---
+
+Task 5: State Surgery -- mv and rm
+
+Sometimes you need to rename a resource or remove it from state without destroying it in AWS.
+
+1) Rename a resource in state:
+
+- terraform state list                              # Note the current resource names
+
+        data.aws_ami.amazon_linux
+        data.aws_availability_zones.available
+        aws_instance.main
+        aws_internet_gateway.gw
+        aws_route_table.example
+        aws_route_table_association.example
+        aws_s3_bucket.app_logs
+        aws_s3_bucket.imported
+        aws_security_group.main
+        aws_subnet.main
+        aws_vpc.main
+
+- terraform state mv aws_s3_bucket.imported aws_s3_bucket.logs_bucket
+        
+        Move "aws_s3_bucket.imported" to "aws_s3_bucket.logs_bucket"
+        Successfully moved 1 object(s).
+
+Update your `.tf` file to match the new name. Run `terraform plan` -- it should show no changes.
+
+        resource "aws_s3_bucket" "logs_bucket" {
+          bucket = "terraweek-import-test-chetan"
+        }
+
+- terraform plan
+
+        No changes. Your infrastructure matches the configuration.
+
+2) Remove a resource from state (without destroying it):
+
+- terraform state rm aws_s3_bucket.logs_bucket
+        
+        Removed aws_s3_bucket.logs_bucket
+        Successfully removed 1 resource instance(s).
+
+Run `terraform plan` -- Terraform no longer knows about the bucket, but it still exists in AWS.
+
+- terraform plan
+
+        Plan: 1 to add, 0 to change, 0 to destroy.
+
+3) Re-import it to bring it back:
+
+- terraform import aws_s3_bucket.logs_bucket terraweek-import-test-chetan
+
+        aws_s3_bucket.logs_bucket: Import prepared!
+          Prepared aws_s3_bucket for import
+
+Document: When would you use `state mv` in a real project? When would you use `state rm`?
+
+- terraform state mv
+
+        Use state mv when the Terraform resource address changes but the actual infrastructure should remain the same.
+
+- terraform state rm
+
+        Use state rm when you want Terraform to stop managing a resource without deleting the actual AWS resource.
+
+  ---
+
+Task 6: Simulate and Fix State Drift
+
+State drift happens when someone changes infrastructure outside of Terraform -- through the AWS console, CLI, or another tool.
+
+1) Apply your full config so everything is in sync
+
+        teraform apply -auto-approve
+
+2) Go to the AWS console and manually:
+
+* Change the Name tag of your EC2 instance to `"ManuallyChanged"`
+
+        Did.
+
+* Change the instance type if it's stopped (or add a new tag)
+
+        Added a new tag
+
+3) Run:
+
+- terraform plan
+
+        Plan: 0 to add, 1 to change, 0 to destroy.
+
+You should see a diff -- Terraform detects that reality no longer matches the desired state.
+
+        # aws_instance.main will be updated in-place
+          ~ resource "aws_instance" "main" {
+                id                                   = "i-03229e32c71e80a91"
+              ~ tags                                 = {
+                    "Environment" = "dev"
+                    "ManagedBy"   = "Terraform"
+                  ~ "Name"        = "ManuallyChanged" -> "terraweek-dev-server"
+                    "Project"     = "terraweek"
+                }
+              ~ tags_all                             = {
+                  ~ "Name"        = "ManuallyChanged" -> "terraweek-dev-server"
+                    # (3 unchanged elements hidden)
+                }
+                # (38 unchanged attributes hidden)
+        
+                # (8 unchanged blocks hidden)
+            }
+
+4) You have two choices:
+
+* Option A: Run `terraform apply` to force reality back to match your config (reconcile)
+
+- terraform apply -auto-approve
+
+        Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+* Option B: Update your `.tf` files to match the manual change (accept the drift)
+
+5) Choose Option A -- apply and verify the tags are restored.
+
+        Yeah did.
+
+6) Run `terraform plan` again -- it should show "No changes." Drift resolved.
+
+        No changes. Your infrastructure matches the configuration.
+
+Document: How do teams prevent state drift in production? (hint: restrict console access, use CI/CD for all changes)
+
+        Teams reduce Terraform state drift by making Terraform the primary source of truth for infrastructure changes. Production AWS console access is restricted using IAM permissions and least-privilege access. Infrastructure changes are made through version-controlled Terraform code and deployed through CI/CD pipelines rather than manually through the AWS console. Remote state is stored securely in an S3 backend with locking and versioning, allowing teams to coordinate changes and recover previous state versions. Regular terraform plan checks can also be used to detect unexpected changes.
