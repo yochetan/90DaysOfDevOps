@@ -212,7 +212,17 @@ Run `terraform plan` -- you should see 5 resources to create.
 
 Verify: Apply and check the AWS VPC console. Can you see all five resources connected?
 
+        terraform apply -auto-approve
+        Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
 
+        Outputs:
+        
+        instance_id = "i-0d4dd5395e66079c2"
+        instance_public_dns = ""
+        instance_public_ip = "34.213.90.43"
+        security_group_id = "sg-0fa673d9571191196"
+        subnet_id = "subnet-0f4bbe093366313a8"
+        vpc_id = "vpc-028e86a077f419eaa"
 
 ---
 
