@@ -324,12 +324,66 @@ Create an `outputs.tf` file with outputs for:
 
 Apply your config and verify the outputs are printed at the end:
 
-        terraform apply
+        terraform apply -auto-approve
+        Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
         
+        Outputs:
+        
+        instance_id = "i-0d4dd5395e66079c2"
+        instance_public_dns = ""
+        instance_public_ip = "34.213.90.43"
+        security_group_id = "sg-0fa673d9571191196"
+        subnet_id = "subnet-0f4bbe093366313a8"
+        vpc_id = "vpc-028e86a077f419eaa"
+
         # After apply, you can also run:
         terraform output                          # Show all outputs
+        
+        instance_id = "i-0d4dd5395e66079c2"
+        instance_public_dns = ""
+        instance_public_ip = "34.213.90.43"
+        security_group_id = "sg-0fa673d9571191196"
+        subnet_id = "subnet-0f4bbe093366313a8"
+        vpc_id = "vpc-028e86a077f419eaa"
+        
         terraform output instance_public_ip       # Show a specific output
+        
+        "34.213.90.43"
+        
         terraform output -json                    # JSON format for scripting
+
+        {
+          "instance_id": {
+            "sensitive": false,
+            "type": "string",
+            "value": "i-0d4dd5395e66079c2"
+          },
+          "instance_public_dns": {
+            "sensitive": false,
+            "type": "string",
+            "value": ""
+          },
+          "instance_public_ip": {
+            "sensitive": false,
+            "type": "string",
+            "value": "34.213.90.43"
+          },
+          "security_group_id": {
+            "sensitive": false,
+            "type": "string",
+            "value": "sg-0fa673d9571191196"
+          },
+          "subnet_id": {
+            "sensitive": false,
+            "type": "string",
+            "value": "subnet-0f4bbe093366313a8"
+          },
+          "vpc_id": {
+            "sensitive": false,
+            "type": "string",
+            "value": "vpc-028e86a077f419eaa"
+          }
+        }
 
 Verify: Does `terraform output instance_public_ip` return the correct IP?
         
@@ -385,6 +439,10 @@ Stop hardcoding the AMI ID. Use a data source to fetch it dynamically.
         }
 
 Apply and verify -- your config now works in any region without changing the AMI.
+        
+        terraform console
+        > data.aws_ami.amazon_linux.id
+        "ami-01477f93b365aa11a"
 
 Document: What is the difference between a `resource` and a `data` source?
 
