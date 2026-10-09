@@ -20,3 +20,12 @@ Task 1: Understand Module Structure
 Create all the directories and empty files. This is the standard layout every Terraform project follows.
 
 *Document*: What is the difference between a "root module" and a "child module"?
+
+| Feature |Root Module |Child Module                                                                          |
+|-----------------------------------------------------------------------------------------------------------  |
+| Definition |The main Terraform configuration you execute |A reusable configuration called by another module |
+| Location |Usually your main project directory |Usually a subdirectory or separate module source             |
+| Execution |You run Terraform commands here |Used through a module block                                     |
+| Purpose |Manages the overall infrastructure |Creates a specific part of the infrastructure                  |
+| Inputs |Receives values from variables and .tfvars files |Receives values through module arguments          |
+| Outputs |Displays useful infrastructure information |Exposes values to the root or calling module           |
