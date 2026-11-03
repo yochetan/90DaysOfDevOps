@@ -29,7 +29,41 @@ Research and write short notes on:
 
 2) How is Ansible different from Chef, Puppet, and Salt?
 
+        All four are Configuration Management tools used to automate server configuration, but they differ in architecture and approach.
+
+| Feature        | Ansible     | Chef         | Puppet       | SaltStack           |
+|----------------|-------------|--------------|--------------|---------------------|
+| Architecture   | Agentless   | Agent-based  | Agent-based  | Usually agent-based |
+| Language       | YAML        | Ruby         | Puppet DSL   | YAML / Python       |
+| Communication  | SSH / WinRM | Chef Client  | Puppet Agent | ZeroMQ / SSH        |
+| Setup          | Easy        | More complex | More complex | Moderate            |
+| Learning curve | Easy        | High         | Moderate     | Moderate            |
+| Execution      | Push-based  | Pull-based   | Pull-based   | Push and pull       |
+
+
 3) What does "agentless" mean? How does Ansible connect to managed nodes?
+
+        Agentless means Ansible does not normally require a separate agent or background software to be installed on every managed server.
+        
+        For example:
+        - In Ansible, you install Ansible on your control node.
+        - You do not normally install Ansible on your EC2 instances.
+        - Ansible connects remotely using SSH.
+        How does Ansible connect?
+        
+        For Linux servers, Ansible uses:
+        - SSH (Secure Shell): Establishes a secure connection.
+        - Port 22: Default SSH port.
+        - Private SSH key: Authenticates the control node.
+        - Python: Usually required on managed Linux nodes to execute modules.
+        For Windows servers, Ansible can use WinRM or SSH.
+        
+        Example with AWS EC2:
+        
+        Suppose you have:
+        - Control Node: Ubuntu laptop.
+        - Managed Node: Amazon Linux EC2 instance.
+        - SSH Key: my-key.pem.
 
 4) Draw or describe the Ansible architecture:
 
