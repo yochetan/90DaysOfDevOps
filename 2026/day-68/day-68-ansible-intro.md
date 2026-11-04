@@ -86,3 +86,170 @@ Research and write short notes on:
 | Playbooks     | YAML files containing automation instructions   | install-nginx.yml |
 
 <img width="1772" height="1204" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/1c67f71b-cd17-4f16-ad1a-0780fc05f3ed" />
+
+---
+
+Task 2: Set Up Your Lab Environment
+
+You need 2-3 EC2 instances to practice on. Choose one approach:
+
+Option A: Use Terraform (recommended -- you just learned this) Use your TerraWeek skills to provision 3 EC2 instances with:
+
+* Amazon Linux 2 or Ubuntu 22.04
+
+* `t2.micro` instance type
+
+* A security group allowing SSH (port 22)
+
+* A key pair for SSH access
+
+`ec2.tf`
+
+        # Region
+        provider "aws" {
+          region = "us-west-2"
+        }
+        
+        # Key Pair
+        resource "aws_key_pair" "my_key_pair" {
+          key_name   = "terra-automate-key"
+          public_key = file("${path.module}/terra-automate-key.pub")
+        }
+        
+        # Default VPC
+        resource "aws_default_vpc" "default" {}
+        
+        # Security Group
+        resource "aws_security_group" "my_security_group" {
+          name        = "terra-security-group"
+          vpc_id      = aws_default_vpc.default.id # interpolation
+          description = "Inbound and outbound rules for the instance security group"
+        }
+        
+        # Inbound & Outbound rules
+        resource "aws_vpc_security_group_ingress_rule" "allow_http" {
+          security_group_id = aws_security_group.my_security_group.id
+          cidr_ipv4         = "0.0.0.0/0"
+          from_port         = 80
+          ip_protocol       = "tcp"
+          to_port           = 80
+        }
+        
+        resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
+          security_group_id = aws_security_group.my_security_group.id
+          cidr_ipv4         = "0.0.0.0/0"
+          from_port         = 22
+          ip_protocol       = "tcp"
+          to_port           = 22
+        }
+        
+        resource "aws_vpc_security_group_egress_rule" "allow_all_traffic" {
+          security_group_id = aws_security_group.my_security_group.id
+          cidr_ipv4         = "0.0.0.0/0"
+          ip_protocol       = "-1" # all protocols and ports
+        }
+        
+        # EC2 Instances
+        resource "aws_instance" "my_instance" {
+        
+          for_each = var.instances
+        
+          ami           = each.value.ami
+          instance_type = each.value.instance_type
+        
+          key_name               = aws_key_pair.my_key_pair.key_name
+          vpc_security_group_ids = [aws_security_group.my_security_group.id]
+        
+          root_block_device {
+            volume_size = 10
+            volume_type = "gp3"
+          }
+        
+          tags = {
+            Name      = each.key
+            OS_Family = each.value.os_family
+          }
+        }
+
+`variables.tf`
+
+        variable "instances" {
+        
+          description = "Map of instance names to AMI IDs, SSH users, and OS Family"
+        
+          type = map(object({
+            ami           = string
+            user          = string
+            os_family     = string
+            instance_type = string
+          }))
+        
+          default = {
+            "control-node-ubuntu" = {
+              ami           = "ami-02167eae61967e403"
+              user          = "ubuntu"
+              os_family     = "ubuntu"
+              instance_type = "t3.micro"
+            }
+            "worker-ubuntu" = {
+              ami           = "ami-02167eae61967e403"
+              user          = "ubuntu"
+              os_family     = "ubuntu"
+              instance_type = "t3.micro"
+            }
+            "worker-redhat" = {
+              ami           = "ami-0da467f007dfebd6b"
+              user          = "ec2-user"
+              os_family     = "redhat"
+              instance_type = "t3.micro"
+            }
+            "worker-amazon" = {
+              ami           = "ami-0803a33fd43db1fbf"
+              user          = "ec2-user"
+              os_family     = "amazon"
+              instance_type = "t3.micro"
+            }
+          }
+        }
+
+Verify you can SSH into each one from your control node:
+
+        ssh -i ~/your-key.pem ec2-user@<public-ip-1>
+        ssh -i ~/your-key.pem ec2-user@<public-ip-2>
+        ssh -i ~/your-key.pem ec2-user@<public-ip-3>
+
+---
+
+Task 3: Install Ansible
+
+Install Ansible on your control node (your laptop or one dedicated EC2 instance):
+
+# Ubuntu/Debian
+
+* sudo apt update
+
+* sudo apt install ansible -y
+
+# Verify
+
+* ansible --version
+
+        ansible [core 2.20.1]
+          config file = None
+          configured module search path = ['/home/ubuntu/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+          ansible python module location = /usr/lib/python3/dist-packages/ansible
+          ansible collection location = /home/ubuntu/.ansible/collections:/usr/share/ansible/collections
+          executable location = /usr/bin/ansible
+          python version = 3.14.4 (main, Apr  8 2026, 04:02:31) [GCC 15.2.0] (/usr/bin/python3)
+          jinja version = 3.1.6
+          pyyaml version = 6.0.3 (with libyaml v0.2.5)
+
+- Confirm the output shows the Ansible version, config file path, and Python version.
+
+        yes, it does.
+
+Document: On which machine did you install Ansible? Why is it only needed on the control node?
+
+        Ansible is installed on the Control Node, which is a jump server.
+
+        Ansible is only needed on the control node because it manages all the automation tasks and connects remotely to managed nodes using SSH.
