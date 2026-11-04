@@ -76,3 +76,39 @@ Research and write short notes on:
 * Modules -- units of work Ansible executes (install a package, copy a file, start a service)
 
 * Playbooks -- YAML files that define what to do on which hosts
+
+| Component     | Meaning                                         | Example           |
+|---------------|-------------------------------------------------|-------------------|
+| Control Node  | Machine where Ansible is installed and executed | Ubuntu laptop     |
+| Managed Nodes | Servers configured by Ansible                   | AWS EC2 instances |
+| Inventory     | List of managed servers                         | inventory.ini     |
+| Modules       | Perform individual tasks                        | Install Nginx     |
+| Playbooks     | YAML files containing automation instructions   | install-nginx.yml |
+
+        flowchart TB
+            A["Control Node<br/>Ubuntu Laptop / Jump Server<br/>Ansible Installed"]
+        
+            B["Inventory<br/>List of Managed Nodes"]
+        
+            C["Playbooks<br/>YAML Automation Instructions"]
+        
+            D["Modules<br/>Install Packages / Copy Files / Manage Services"]
+        
+            E["Managed Node 1<br/>AWS EC2 - Web Server"]
+        
+            F["Managed Node 2<br/>AWS EC2 - App Server"]
+        
+            G["Managed Node 3<br/>AWS EC2 - Database Server"]
+        
+            A --> B
+            A --> C
+            C --> D
+        
+            D -->|"SSH - Port 22"| E
+            D -->|"SSH - Port 22"| F
+            D -->|"SSH - Port 22"| G
+        
+            E -.->|"Execution Results"| A
+            F -.->|"Execution Results"| A
+            G -.->|"Execution Results"| A
+
