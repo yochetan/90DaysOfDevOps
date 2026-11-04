@@ -85,30 +85,4 @@ Research and write short notes on:
 | Modules       | Perform individual tasks                        | Install Nginx     |
 | Playbooks     | YAML files containing automation instructions   | install-nginx.yml |
 
-        flowchart TB
-            A["Control Node<br/>Ubuntu Laptop / Jump Server<br/>Ansible Installed"]
-        
-            B["Inventory<br/>List of Managed Nodes"]
-        
-            C["Playbooks<br/>YAML Automation Instructions"]
-        
-            D["Modules<br/>Install Packages / Copy Files / Manage Services"]
-        
-            E["Managed Node 1<br/>AWS EC2 - Web Server"]
-        
-            F["Managed Node 2<br/>AWS EC2 - App Server"]
-        
-            G["Managed Node 3<br/>AWS EC2 - Database Server"]
-        
-            A --> B
-            A --> C
-            C --> D
-        
-            D -->|"SSH - Port 22"| E
-            D -->|"SSH - Port 22"| F
-            D -->|"SSH - Port 22"| G
-        
-            E -.->|"Execution Results"| A
-            F -.->|"Execution Results"| A
-            G -.->|"Execution Results"| A
-
+<img width="1772" height="1204" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/1c67f71b-cd17-4f16-ad1a-0780fc05f3ed" />
